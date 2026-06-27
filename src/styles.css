@@ -1,0 +1,106 @@
+@import url("https://cdn.jsdelivr.net/gh/sunn-us/SUIT/fonts/variable/woff2/SUIT-Variable.css");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family:
+    "SUIT Variable", Inter, ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #1f2937;
+  background: #e7ecf4;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overscroll-behavior-y: none;
+}
+
+button,
+a,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #2f6bff;
+  outline-offset: 3px;
+}
+
+.large-text {
+  font-size: 112.5%;
+}
+
+.app-bg {
+  background:
+    linear-gradient(180deg, #fbfcff 0%, #f4f7fb 42%, #eef3f8 100%);
+}
+
+.app-shell-shadow {
+  box-shadow: 0 26px 72px rgba(31, 41, 55, 0.15);
+}
+
+.app-card {
+  background: #ffffff;
+  border: 1px solid #e9eef5;
+  box-shadow: 0 10px 28px rgba(31, 41, 55, 0.055);
+}
+
+.subtle-card {
+  background: #f8fafc;
+  border: 1px solid #e9eef5;
+}
+
+.muted-text {
+  color: #6b7280;
+}
+
+.hairline {
+  border-color: #e9eef5;
+}
+
+.high-contrast {
+  color: #ffffff;
+  background: #070a10;
+}
+
+.high-contrast .app-bg {
+  background: #070a10;
+}
+
+.high-contrast .surface,
+.high-contrast .app-card,
+.high-contrast .subtle-card {
+  color: #ffffff;
+  background: #111827;
+  border-color: #374151;
+}
+
+.high-contrast .muted-text {
+  color: #d1d5db;
+}
+
+.high-contrast .tab-bar {
+  background: #111827;
+  border-color: #374151;
+}
+
+.high-contrast input {
+  color: #ffffff;
+}
