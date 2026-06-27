@@ -2,7 +2,11 @@ import { useState, type ReactNode } from "react";
 import {
   ArrowRight,
   Bot,
+  CheckCircle2,
   Clock3,
+  Database,
+  FileClock,
+  FileText,
   Mic,
   Send,
   ShieldCheck,
@@ -14,22 +18,50 @@ import { agentProfile, rightsPackages, todayAlert } from "../data/mockData";
 type HomePageProps = {
   simpleMode: boolean;
   onOpenPackage: () => void;
+  onOpenConsent: () => void;
+  onOpenLogs: () => void;
+  onOpenSettings: () => void;
+};
+
+type AgentAction = {
+  title: string;
+  description: string;
+  steps: string[];
+  buttonLabel: string;
+  icon: ReactNode;
+  onRun: () => void;
 };
 
 const suggestions = [
-  "실직했는데 받을 수 있는 지원 찾아줘",
+  "나 실직했어",
   "신청서 준비해줘",
   "내 동의 기록 보여줘",
 ];
 
-export function HomePage({ simpleMode, onOpenPackage }: HomePageProps) {
+export function HomePage({
+  simpleMode,
+  onOpenPackage,
+  onOpenConsent,
+  onOpenLogs,
+  onOpenSettings,
+}: HomePageProps) {
   const [message, setMessage] = useState("");
   const [submittedMessage, setSubmittedMessage] = useState("");
+  const [agentAction, setAgentAction] = useState<AgentAction | null>(null);
 
   function submitMessage(value = message) {
     const cleanValue = value.trim();
     if (!cleanValue) return;
+
     setSubmittedMessage(cleanValue);
+    setAgentAction(
+      createAgentAction(cleanValue, {
+        onOpenPackage,
+        onOpenConsent,
+        onOpenLogs,
+        onOpenSettings,
+      }),
+    );
     setMessage("");
   }
 
@@ -86,6 +118,7 @@ export function HomePage({ simpleMode, onOpenPackage }: HomePageProps) {
       <AgentChat
         message={message}
         submittedMessage={submittedMessage}
+        action={agentAction}
         onMessageChange={setMessage}
         onSubmit={submitMessage}
       />
@@ -131,11 +164,13 @@ export function HomePage({ simpleMode, onOpenPackage }: HomePageProps) {
 function AgentChat({
   message,
   submittedMessage,
+  action,
   onMessageChange,
   onSubmit,
 }: {
   message: string;
   submittedMessage: string;
+  action: AgentAction | null;
   onMessageChange: (value: string) => void;
   onSubmit: (value?: string) => void;
 }) {
@@ -159,13 +194,16 @@ function AgentChat({
       </div>
 
       {submittedMessage ? (
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 space-y-3">
           <div className="ml-auto max-w-[86%] rounded-[8px] rounded-br-[4px] bg-[#2f6bff] px-4 py-3 text-[14px] font-semibold leading-6 text-white">
             {submittedMessage}
           </div>
           <div className="max-w-[90%] rounded-[8px] rounded-bl-[4px] bg-[#f3f6fb] px-4 py-3 text-[14px] font-semibold leading-6 text-[#374151]">
-            좋아요. 관련 권리를 찾고, 필요한 동의 항목부터 정리할게요.
+            {action
+              ? "요청을 확인했어요. 바로 실행할 수 있는 작업을 만들었습니다."
+              : "좋아요. 관련 권리를 찾고, 필요한 동의 항목부터 정리할게요."}
           </div>
+          {action ? <ActionCard action={action} /> : null}
         </div>
       ) : (
         <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
@@ -207,6 +245,110 @@ function AgentChat({
       </form>
     </article>
   );
+}
+
+function ActionCard({ action }: { action: AgentAction }) {
+  return (
+    <div className="rounded-[8px] border border-[#dce8ff] bg-[#f7faff] p-4">
+      <div className="flex gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#2f6bff] text-white">
+          {action.icon}
+        </div>
+        <div>
+          <p className="text-[16px] font-extrabold text-[#1f2937]">
+            {action.title}
+          </p>
+          <p className="muted-text mt-1 text-[13px] font-semibold leading-5">
+            {action.description}
+          </p>
+        </div>
+      </div>
+      <div className="mt-3 space-y-2">
+        {action.steps.map((step) => (
+          <div key={step} className="flex items-center gap-2">
+            <CheckCircle2 aria-hidden="true" size={16} className="text-[#2f6bff]" />
+            <p className="text-[13px] font-bold text-[#4b5563]">{step}</p>
+          </div>
+        ))}
+      </div>
+      <Button
+        onClick={action.onRun}
+        className="mt-4 w-full"
+        icon={<ArrowRight aria-hidden="true" size={18} />}
+      >
+        {action.buttonLabel}
+      </Button>
+    </div>
+  );
+}
+
+function createAgentAction(
+  text: string,
+  actions: {
+    onOpenPackage: () => void;
+    onOpenConsent: () => void;
+    onOpenLogs: () => void;
+    onOpenSettings: () => void;
+  },
+): AgentAction {
+  const normalized = text.replace(/\s/g, "");
+
+  if (includesAny(normalized, ["실직", "퇴사", "해고", "구직", "일자리", "직장그만"])) {
+    return {
+      title: "실직자 권리실행 패키지를 만들었어요",
+      description: "실업급여, 취업지원, 직업훈련, 긴급복지를 한 번에 실행할 수 있습니다.",
+      steps: ["지원 후보 5건 감지", "예상 준비 시간 15분", "정보 조회 동의 단계 준비"],
+      buttonLabel: "권리 실행 시작",
+      icon: <Sparkles aria-hidden="true" size={20} />,
+      onRun: actions.onOpenPackage,
+    };
+  }
+
+  if (includesAny(normalized, ["신청서", "서류", "준비", "제출"])) {
+    return {
+      title: "신청 준비를 시작할 수 있어요",
+      description: "먼저 필요한 정보 조회에 동의하면 AI가 신청서 초안을 준비합니다.",
+      steps: ["필요 데이터 3개 확인", "첨부서류 대체 가능 여부 점검", "초안 작성 전 동의 필요"],
+      buttonLabel: "동의하고 준비하기",
+      icon: <FileText aria-hidden="true" size={20} />,
+      onRun: actions.onOpenConsent,
+    };
+  }
+
+  if (includesAny(normalized, ["기록", "조회내역", "동의기록", "로그"])) {
+    return {
+      title: "AI 활동 기록을 열 수 있어요",
+      description: "언제 어떤 정보를 조회했고 어떤 신청서를 준비했는지 확인합니다.",
+      steps: ["조회 시간 확인", "신청서 준비 이력 확인", "대리권 철회 가능"],
+      buttonLabel: "기록 보기",
+      icon: <FileClock aria-hidden="true" size={20} />,
+      onRun: actions.onOpenLogs,
+    };
+  }
+
+  if (includesAny(normalized, ["마이데이터", "개인정보", "정보관리", "동의철회"])) {
+    return {
+      title: "내 마이데이터 관리로 이동할 수 있어요",
+      description: "연결된 개인정보, 사용 기간, 최근 사용 내역을 확인합니다.",
+      steps: ["연결 정보 확인", "사용 기간 확인", "동의 철회 가능"],
+      buttonLabel: "마이데이터 관리",
+      icon: <Database aria-hidden="true" size={20} />,
+      onRun: actions.onOpenSettings,
+    };
+  }
+
+  return {
+    title: "권리 탐색을 시작했어요",
+    description: "말씀하신 상황에 맞는 지원 후보를 찾고 있습니다.",
+    steps: ["상황 분류", "관련 권리 탐색", "필요 동의 항목 정리"],
+    buttonLabel: "실행 패키지 보기",
+    icon: <Bot aria-hidden="true" size={20} />,
+    onRun: actions.onOpenPackage,
+  };
+}
+
+function includesAny(text: string, keywords: string[]) {
+  return keywords.some((keyword) => text.includes(keyword));
 }
 
 function Metric({ value, label }: { value: string; label: string }) {

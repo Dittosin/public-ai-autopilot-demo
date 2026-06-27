@@ -29,6 +29,9 @@ function App() {
           <HomePage
             simpleMode={simpleMode}
             onOpenPackage={() => setScreen("package")}
+            onOpenConsent={() => setScreen("consent")}
+            onOpenLogs={() => setScreen("logs")}
+            onOpenSettings={() => setScreen("settings")}
           />
         );
       case "package":
