@@ -8,12 +8,14 @@ import {
   FileClock,
   FileText,
   Mic,
+  Search,
   Send,
   ShieldCheck,
   Sparkles,
 } from "lucide-react";
 import { Button } from "../components/Button";
-import { agentProfile, rightsPackages, todayAlert } from "../data/mockData";
+import { StatusPill } from "../components/StatusPill";
+import { agentProfile, rightsPackages } from "../data/mockData";
 
 type HomePageProps = {
   simpleMode: boolean;
@@ -48,20 +50,25 @@ export function HomePage({
   const [message, setMessage] = useState("");
   const [submittedMessage, setSubmittedMessage] = useState("");
   const [agentAction, setAgentAction] = useState<AgentAction | null>(null);
+  const [supportChecked, setSupportChecked] = useState(false);
 
   function submitMessage(value = message) {
     const cleanValue = value.trim();
     if (!cleanValue) return;
 
     setSubmittedMessage(cleanValue);
-    setAgentAction(
-      createAgentAction(cleanValue, {
-        onOpenPackage,
-        onOpenConsent,
-        onOpenLogs,
-        onOpenSettings,
-      }),
-    );
+    const action = createAgentAction(cleanValue, {
+      onOpenPackage,
+      onOpenConsent,
+      onOpenLogs,
+      onOpenSettings,
+    });
+    setAgentAction(action);
+
+    if (cleanValue.includes("실직") || cleanValue.includes("지원") || cleanValue.includes("받을")) {
+      setSupportChecked(true);
+    }
+
     setMessage("");
   }
 
@@ -72,48 +79,19 @@ export function HomePage({
           안녕하세요, 민지님
         </p>
         <h1 className="mt-1 text-[29px] font-extrabold leading-[1.2]">
-          오늘 실행할 권리를
+          받을 수 있는 지원을
           <br />
-          정리해두었어요
+          먼저 확인해볼까요?
         </h1>
       </div>
 
-      <article className="app-card mt-5 overflow-hidden rounded-[8px]">
-        <div className="bg-[#2f6bff] px-5 py-5 text-white">
-          <div className="flex items-start gap-3">
-            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-white/16">
-              <Bot aria-hidden="true" size={23} />
-            </div>
-            <div>
-              <p className="text-[14px] font-bold text-white/80">
-                {agentProfile.name}
-              </p>
-              <p className="mt-1 text-[21px] font-extrabold leading-7">
-                {simpleMode ? "받을 수 있는 지원 5건을 찾았어요." : todayAlert.title}
-              </p>
-              <p className="mt-2 text-[14px] font-semibold leading-6 text-white/80">
-                {todayAlert.description}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-2 p-4">
-          <Metric value="5건" label="찾은 권리" />
-          <Metric value="15분" label="예상 준비" />
-          <Metric value="0건" label="자동 제출" />
-        </div>
-
-        <div className="px-4 pb-4">
-          <Button
-            onClick={onOpenPackage}
-            className="w-full"
-            icon={<ArrowRight aria-hidden="true" size={20} />}
-          >
-            실행 패키지 보기
-          </Button>
-        </div>
-      </article>
+      <SupportLookupPanel
+        simpleMode={simpleMode}
+        checked={supportChecked}
+        onCheck={() => setSupportChecked(true)}
+        onOpenPackage={onOpenPackage}
+        onOpenConsent={onOpenConsent}
+      />
 
       <AgentChat
         message={message}
@@ -161,6 +139,133 @@ export function HomePage({
   );
 }
 
+function SupportLookupPanel({
+  simpleMode,
+  checked,
+  onCheck,
+  onOpenPackage,
+  onOpenConsent,
+}: {
+  simpleMode: boolean;
+  checked: boolean;
+  onCheck: () => void;
+  onOpenPackage: () => void;
+  onOpenConsent: () => void;
+}) {
+  const packageItem = rightsPackages[0];
+  const primaryItems = packageItem.items.slice(0, 3);
+
+  if (!checked) {
+    return (
+      <article className="app-card mt-5 overflow-hidden rounded-[8px]">
+        <div className="bg-[#2f6bff] px-5 py-5 text-white">
+          <div className="flex items-start gap-3">
+            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-white/16">
+              <Search aria-hidden="true" size={23} />
+            </div>
+            <div>
+              <p className="text-[14px] font-bold text-white/80">
+                {agentProfile.name}
+              </p>
+              <p className="mt-1 text-[21px] font-extrabold leading-7">
+                내가 받을 수 있는 지원을 확인해드릴게요
+              </p>
+              <p className="mt-2 text-[14px] font-semibold leading-6 text-white/80">
+                실직, 출산, 돌봄 같은 상황을 기준으로 놓친 권리를 찾아봅니다.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-3 gap-2 p-4">
+          <Metric value="1분" label="확인 시작" />
+          <Metric value="동의 전" label="제출 없음" />
+          <Metric value="AI" label="자동 정리" />
+        </div>
+
+        <div className="px-4 pb-4">
+          <Button
+            onClick={onCheck}
+            className="w-full"
+            icon={<ArrowRight aria-hidden="true" size={20} />}
+          >
+            내가 받을 수 있는 지원 확인하기
+          </Button>
+          <p className="muted-text mt-3 text-center text-[12px] font-semibold leading-5">
+            데모 화면에서는 실제 개인정보를 조회하지 않습니다.
+          </p>
+        </div>
+      </article>
+    );
+  }
+
+  return (
+    <article className="app-card mt-5 rounded-[8px] p-4">
+      <div className="flex items-start justify-between gap-3">
+        <div>
+          <p className="text-[13px] font-extrabold text-[#2f6bff]">
+            조회 결과
+          </p>
+          <h2 className="mt-1 text-[22px] font-extrabold leading-7">
+            받을 수 있는 지원 5건을 찾았어요
+          </h2>
+          <p className="muted-text mt-2 text-[14px] font-semibold leading-6">
+            {simpleMode
+              ? "먼저 신청 가능성이 높은 것부터 보여드려요."
+              : "실직 후 받을 수 있는 지원을 우선순위대로 정리했습니다."}
+          </p>
+        </div>
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
+          <CheckCircle2 aria-hidden="true" size={23} />
+        </div>
+      </div>
+
+      <div className="mt-4 rounded-[8px] bg-[#f8fafc] p-3">
+        <div className="flex items-center justify-between">
+          <p className="text-[13px] font-bold text-[#6b7280]">예상 준비 시간</p>
+          <p className="text-[15px] font-extrabold text-[#1f2937]">
+            약 90분 → 약 15분
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-3 space-y-2">
+        {primaryItems.map((item) => (
+          <div
+            key={item.name}
+            className="rounded-[8px] border hairline bg-white px-3 py-3"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[16px] font-extrabold">{item.name}</p>
+                <p className="muted-text mt-1 text-[13px] font-medium leading-5">
+                  {item.description}
+                </p>
+              </div>
+              <StatusPill status={item.status} />
+            </div>
+            <button
+              type="button"
+              onClick={onOpenConsent}
+              className="mt-3 flex min-h-10 w-full items-center justify-center rounded-[8px] bg-[#eef4ff] px-4 text-[13px] font-extrabold text-[#2f6bff]"
+            >
+              신청 준비
+            </button>
+          </div>
+        ))}
+      </div>
+
+      <Button
+        onClick={onOpenPackage}
+        className="mt-4 w-full"
+        icon={<ArrowRight aria-hidden="true" size={20} />}
+      >
+        전체 지원 5건 보기
+      </Button>
+    </article>
+  );
+}
+
 function AgentChat({
   message,
   submittedMessage,
@@ -199,9 +304,7 @@ function AgentChat({
             {submittedMessage}
           </div>
           <div className="max-w-[90%] rounded-[8px] rounded-bl-[4px] bg-[#f3f6fb] px-4 py-3 text-[14px] font-semibold leading-6 text-[#374151]">
-            {action
-              ? "요청을 확인했어요. 바로 실행할 수 있는 작업을 만들었습니다."
-              : "좋아요. 관련 권리를 찾고, 필요한 동의 항목부터 정리할게요."}
+            요청을 확인했어요. 바로 실행할 수 있는 작업을 만들었습니다.
           </div>
           {action ? <ActionCard action={action} /> : null}
         </div>
@@ -293,11 +396,11 @@ function createAgentAction(
 ): AgentAction {
   const normalized = text.replace(/\s/g, "");
 
-  if (includesAny(normalized, ["실직", "퇴사", "해고", "구직", "일자리", "직장그만"])) {
+  if (includesAny(normalized, ["실직", "퇴사", "해고", "구직", "일자리", "직장그만", "지원"])) {
     return {
       title: "실직자 권리실행 패키지를 만들었어요",
-      description: "실업급여, 취업지원, 직업훈련, 긴급복지를 한 번에 실행할 수 있습니다.",
-      steps: ["지원 후보 5건 감지", "예상 준비 시간 15분", "정보 조회 동의 단계 준비"],
+      description: "받을 수 있는 지원을 조회했고, 신청 준비로 바로 이어질 수 있습니다.",
+      steps: ["지원 후보 5건 감지", "신청 가능성 높은 항목 우선 표시", "정보 조회 동의 단계 준비"],
       buttonLabel: "권리 실행 시작",
       icon: <Sparkles aria-hidden="true" size={20} />,
       onRun: actions.onOpenPackage,
