@@ -17,7 +17,7 @@ export function ApplicationPrepPage({
 
   return (
     <section className="px-5 py-5">
-      <ProgressSteps current={3} />
+      <ProgressSteps current={2} />
 
       <div className="mt-5">
         <ScreenHeader
@@ -33,7 +33,7 @@ export function ApplicationPrepPage({
 
       <article className="app-card mt-5 rounded-[8px] p-5">
         <div className="flex items-start gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#2f6bff] text-white">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[8px] bg-[#2f6bff] text-white">
             <FileText aria-hidden="true" size={22} />
           </div>
           <div>
@@ -80,24 +80,6 @@ export function ApplicationPrepPage({
             </div>
           );
         })}
-      </article>
-
-      <article className="mt-3 rounded-[8px] bg-[#f8fafc] p-4">
-        <p className="text-[14px] font-extrabold text-[#1f2937]">
-          누락/오류 검증
-        </p>
-        <div className="mt-3 space-y-2">
-          {applicationDraft.validation.map((item) => (
-            <div key={item} className="flex items-center gap-2">
-              <CheckCircle2
-                aria-hidden="true"
-                size={17}
-                className="text-[#2f6bff]"
-              />
-              <p className="text-[13px] font-semibold text-[#4b5563]">{item}</p>
-            </div>
-          ))}
-        </div>
       </article>
 
       <Button

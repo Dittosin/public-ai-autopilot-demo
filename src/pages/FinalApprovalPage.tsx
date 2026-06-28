@@ -12,12 +12,12 @@ type FinalApprovalPageProps = {
 export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps) {
   return (
     <section className="px-5 py-5">
-      <ProgressSteps current={4} />
+      <ProgressSteps current={3} />
 
       <div className="mt-5">
         <ScreenHeader
           eyebrow="최종 승인"
-          title="제출 전 마지막 확인"
+          title="확인하면 제출됩니다"
           description={
             simpleMode
               ? "직접 승인해야 제출됩니다."
@@ -27,9 +27,9 @@ export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps
       </div>
 
       <article className="app-card mt-5 rounded-[8px] px-4">
-        <ReviewLine title="조회한 정보" items={finalReview.checkedInfo} />
-        <ReviewLine title="제출될 서류" items={finalReview.documents} />
-        <ReviewLine title="신청 대상" items={finalReview.targets} last />
+        <ReviewLine title="신청 대상" items={finalReview.targets} />
+        <ReviewLine title="확인한 정보" items={finalReview.checkedInfo} />
+        <ReviewLine title="제출될 서류" items={finalReview.documents} last />
       </article>
 
       <article className="mt-3 rounded-[8px] border border-[#ffe4b5] bg-[#fff8eb] p-4">
@@ -53,7 +53,7 @@ export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps
           본인인증 후 최종 제출
         </Button>
         <Button variant="secondary" onClick={onLogs} className="w-full">
-          기록 먼저 보기
+          기록 보기
         </Button>
       </div>
     </section>

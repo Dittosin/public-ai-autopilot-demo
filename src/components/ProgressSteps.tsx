@@ -1,13 +1,13 @@
-const steps = ["탐색", "동의", "준비", "승인"];
+const steps = ["조회", "준비", "승인"];
 
 type ProgressStepsProps = {
-  current: 1 | 2 | 3 | 4;
+  current: 1 | 2 | 3;
 };
 
 export function ProgressSteps({ current }: ProgressStepsProps) {
   return (
     <div className="app-card rounded-[8px] p-3" aria-label="진행 단계">
-      <div className="grid grid-cols-4 gap-2">
+      <div className="grid grid-cols-3 gap-2">
         {steps.map((label, index) => {
           const step = index + 1;
           const active = step === current;
