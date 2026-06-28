@@ -11,9 +11,10 @@ export type Screen =
   | "settings";
 
 export type PackageStatus =
-  | "신청 가능성 높음"
+  | "바로 신청 가능"
   | "추가 확인 필요"
-  | "신청서 초안 준비됨";
+  | "현재 해당 없음"
+  | "추후 알림 필요";
 
 export type RightsPackage = {
   id: string;

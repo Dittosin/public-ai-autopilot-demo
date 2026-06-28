@@ -12,7 +12,7 @@ type FinalApprovalPageProps = {
 export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps) {
   return (
     <section className="px-5 py-5">
-      <ProgressSteps current={3} />
+      <ProgressSteps current={4} />
 
       <div className="mt-5">
         <ScreenHeader
@@ -39,9 +39,10 @@ export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps
             size={20}
             className="mt-0.5 shrink-0 text-[#9a5b00]"
           />
-          <p className="text-[14px] font-semibold leading-6 text-[#8a5200]">
-            AI는 신청 준비를 도와주며, 최종 제출은 사용자의 승인 후에만 진행됩니다.
-          </p>
+          <div className="space-y-2 text-[14px] font-semibold leading-6 text-[#8a5200]">
+            <p>공식 자격 판정과 처분은 소관기관 시스템이 수행합니다.</p>
+            <p>AI는 신청 준비를 도와주며, 사용자 승인 없이 제출하지 않습니다.</p>
+          </div>
         </div>
       </article>
 

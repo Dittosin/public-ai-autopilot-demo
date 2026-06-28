@@ -14,6 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Button } from "../components/Button";
+import { KpiCards } from "../components/KpiCards";
 import { StatusPill } from "../components/StatusPill";
 import { agentProfile, rightsPackages } from "../data/mockData";
 
@@ -57,15 +58,24 @@ export function HomePage({
     if (!cleanValue) return;
 
     setSubmittedMessage(cleanValue);
-    const action = createAgentAction(cleanValue, {
-      onOpenPackage,
-      onOpenConsent,
-      onOpenLogs,
-      onOpenSettings,
-    });
-    setAgentAction(action);
+    setAgentAction(
+      createAgentAction(cleanValue, {
+        onOpenPackage,
+        onOpenConsent,
+        onOpenLogs,
+        onOpenSettings,
+      }),
+    );
 
-    if (cleanValue.includes("실직") || cleanValue.includes("지원") || cleanValue.includes("받을")) {
+    if (
+      includesAny(cleanValue.replace(/\s/g, ""), [
+        "실직",
+        "지원",
+        "받을",
+        "퇴사",
+        "구직",
+      ])
+    ) {
       setSupportChecked(true);
     }
 
@@ -76,9 +86,9 @@ export function HomePage({
     <section className="px-5 py-5">
       <div>
         <p className="text-[13px] font-extrabold text-[#2f6bff]">
-          안녕하세요, 민지님
+          모두의 AI 기반에서 작동 가능한 생애사건 권리실행 에이전트 데모
         </p>
-        <h1 className="mt-1 text-[29px] font-extrabold leading-[1.2]">
+        <h1 className="mt-2 text-[29px] font-extrabold leading-[1.2]">
           받을 수 있는 지원을
           <br />
           먼저 확인해볼까요?
@@ -109,8 +119,8 @@ export function HomePage({
         />
         <InfoCard
           icon={<Clock3 aria-hidden="true" size={21} />}
-          title="시간 절약"
-          description="90분 일을 약 15분으로 줄여요."
+          title="공식 판정 별도"
+          description="처분은 소관기관이 수행합니다."
         />
       </div>
 
@@ -168,10 +178,10 @@ function SupportLookupPanel({
                 {agentProfile.name}
               </p>
               <p className="mt-1 text-[21px] font-extrabold leading-7">
-                내가 받을 수 있는 지원을 확인해드릴게요
+                기존 정부 AI 인프라와 연계해 신청 가능한 상태까지 준비합니다
               </p>
               <p className="mt-2 text-[14px] font-semibold leading-6 text-white/80">
-                실직, 출산, 돌봄 같은 상황을 기준으로 놓친 권리를 찾아봅니다.
+                실직, 출산, 돌봄 같은 생애사건을 기준으로 놓친 권리를 찾아봅니다.
               </p>
             </div>
           </div>
@@ -200,69 +210,63 @@ function SupportLookupPanel({
   }
 
   return (
-    <article className="app-card mt-5 rounded-[8px] p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[13px] font-extrabold text-[#2f6bff]">
-            조회 결과
-          </p>
-          <h2 className="mt-1 text-[22px] font-extrabold leading-7">
-            받을 수 있는 지원 5건을 찾았어요
-          </h2>
-          <p className="muted-text mt-2 text-[14px] font-semibold leading-6">
-            {simpleMode
-              ? "먼저 신청 가능성이 높은 것부터 보여드려요."
-              : "실직 후 받을 수 있는 지원을 우선순위대로 정리했습니다."}
-          </p>
-        </div>
-        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
-          <CheckCircle2 aria-hidden="true" size={23} />
-        </div>
-      </div>
-
-      <div className="mt-4 rounded-[8px] bg-[#f8fafc] p-3">
-        <div className="flex items-center justify-between">
-          <p className="text-[13px] font-bold text-[#6b7280]">예상 준비 시간</p>
-          <p className="text-[15px] font-extrabold text-[#1f2937]">
-            약 90분 → 약 15분
-          </p>
-        </div>
-      </div>
-
-      <div className="mt-3 space-y-2">
-        {primaryItems.map((item) => (
-          <div
-            key={item.name}
-            className="rounded-[8px] border hairline bg-white px-3 py-3"
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-[16px] font-extrabold">{item.name}</p>
-                <p className="muted-text mt-1 text-[13px] font-medium leading-5">
-                  {item.description}
-                </p>
-              </div>
-              <StatusPill status={item.status} />
-            </div>
-            <button
-              type="button"
-              onClick={onOpenConsent}
-              className="mt-3 flex min-h-10 w-full items-center justify-center rounded-[8px] bg-[#eef4ff] px-4 text-[13px] font-extrabold text-[#2f6bff]"
-            >
-              신청 준비
-            </button>
+    <div className="mt-5 space-y-3">
+      <article className="app-card rounded-[8px] p-4">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-[13px] font-extrabold text-[#2f6bff]">
+              조회 결과
+            </p>
+            <h2 className="mt-1 text-[22px] font-extrabold leading-7">
+              받을 수 있는 지원 5건을 찾았어요
+            </h2>
+            <p className="muted-text mt-2 text-[14px] font-semibold leading-6">
+              {simpleMode
+                ? "먼저 신청 가능한 항목부터 보여드려요."
+                : "가능성 분류 후 바로 신청 가능한 항목과 추가 확인 항목을 나눴습니다."}
+            </p>
           </div>
-        ))}
-      </div>
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
+            <CheckCircle2 aria-hidden="true" size={23} />
+          </div>
+        </div>
 
-      <Button
-        onClick={onOpenPackage}
-        className="mt-4 w-full"
-        icon={<ArrowRight aria-hidden="true" size={20} />}
-      >
-        전체 지원 5건 보기
-      </Button>
-    </article>
+        <div className="mt-3 space-y-2">
+          {primaryItems.map((item) => (
+            <div
+              key={item.name}
+              className="rounded-[8px] border hairline bg-white px-3 py-3"
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-[16px] font-extrabold">{item.name}</p>
+                  <p className="muted-text mt-1 text-[13px] font-medium leading-5">
+                    {item.description}
+                  </p>
+                </div>
+                <StatusPill status={item.status} />
+              </div>
+              <button
+                type="button"
+                onClick={onOpenConsent}
+                className="mt-3 flex min-h-10 w-full items-center justify-center rounded-[8px] bg-[#eef4ff] px-4 text-[13px] font-extrabold text-[#2f6bff]"
+              >
+                신청 준비
+              </button>
+            </div>
+          ))}
+        </div>
+
+        <Button
+          onClick={onOpenPackage}
+          className="mt-4 w-full"
+          icon={<ArrowRight aria-hidden="true" size={20} />}
+        >
+          전체 지원 5건 보기
+        </Button>
+      </article>
+      <KpiCards />
+    </div>
   );
 }
 
@@ -396,11 +400,11 @@ function createAgentAction(
 ): AgentAction {
   const normalized = text.replace(/\s/g, "");
 
-  if (includesAny(normalized, ["실직", "퇴사", "해고", "구직", "일자리", "직장그만", "지원"])) {
+  if (includesAny(normalized, ["실직", "퇴사", "해고", "구직", "일자리", "지원"])) {
     return {
       title: "실직자 권리실행 패키지를 만들었어요",
-      description: "받을 수 있는 지원을 조회했고, 신청 준비로 바로 이어질 수 있습니다.",
-      steps: ["지원 후보 5건 감지", "신청 가능성 높은 항목 우선 표시", "정보 조회 동의 단계 준비"],
+      description: "지원 가능성을 분류했고, 목적별 동의 후 신청 준비로 이어질 수 있습니다.",
+      steps: ["지원 후보 5건 감지", "바로 신청 가능 항목 우선 표시", "목적별 동의 단계 준비"],
       buttonLabel: "권리 실행 시작",
       icon: <Sparkles aria-hidden="true" size={20} />,
       onRun: actions.onOpenPackage,
@@ -410,8 +414,8 @@ function createAgentAction(
   if (includesAny(normalized, ["신청서", "서류", "준비", "제출"])) {
     return {
       title: "신청 준비를 시작할 수 있어요",
-      description: "먼저 필요한 정보 조회에 동의하면 AI가 신청서 초안을 준비합니다.",
-      steps: ["필요 데이터 3개 확인", "첨부서류 대체 가능 여부 점검", "초안 작성 전 동의 필요"],
+      description: "필요한 정보 조회에 동의하면 AI가 신청서 초안을 준비합니다.",
+      steps: ["필요 데이터 3개 확인", "첨부서류 대체 가능 여부 점검", "사용자 승인 전 제출 차단"],
       buttonLabel: "동의하고 준비하기",
       icon: <FileText aria-hidden="true" size={20} />,
       onRun: actions.onOpenConsent,

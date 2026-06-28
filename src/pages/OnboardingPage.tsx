@@ -25,10 +25,10 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
         <h1 className="mt-3 text-[35px] font-extrabold leading-[1.16]">
           찾아야 받던 권리,
           <br />
-          이제 먼저 알려드려요
+          신청 가능한 상태까지
         </h1>
         <p className="muted-text mt-4 text-[17px] font-semibold leading-7">
-          동의한 정보만 확인하고, 받을 수 있는 지원과 신청 준비를 한곳에서 도와드립니다.
+          모두의 AI 기반에서 작동 가능한 생애사건 권리실행 에이전트 데모입니다.
         </p>
       </div>
 
@@ -43,7 +43,7 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
       </article>
 
       <div className="mt-5 space-y-3">
-        {["동의한 정보만 확인", "신청서 초안까지 준비", "제출은 사용자 승인 후"].map(
+        {["목적별 동의 후 조회", "신청서 초안까지 준비", "제출은 사용자 승인 후"].map(
           (item) => (
             <div
               key={item}

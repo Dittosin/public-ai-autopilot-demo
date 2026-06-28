@@ -30,28 +30,28 @@ export const rightsPackages: RightsPackage[] = [
     items: [
       {
         name: "실업급여",
-        description: "고용보험 이력 기준으로 받을 가능성이 높습니다.",
-        status: "신청 가능성 높음",
+        description: "고용보험 이력 기준으로 바로 신청 가능한 상태입니다.",
+        status: "바로 신청 가능",
       },
       {
         name: "국민취업지원제도",
-        description: "구직 상태를 확인하면 신청서 초안을 만들 수 있습니다.",
-        status: "신청서 초안 준비됨",
+        description: "구직 상태와 가구 정보를 확인하면 신청 준비가 가능합니다.",
+        status: "추가 확인 필요",
       },
       {
         name: "직업훈련",
-        description: "최근 경력과 희망 직무에 맞는 과정을 찾았습니다.",
-        status: "신청 가능성 높음",
+        description: "최근 경력과 희망 직무에 맞는 과정을 추천할 수 있습니다.",
+        status: "바로 신청 가능",
       },
       {
         name: "긴급복지",
-        description: "소득과 가구 상황을 한 번 더 확인해야 합니다.",
+        description: "소득과 위기 사유 확인이 필요합니다.",
         status: "추가 확인 필요",
       },
       {
         name: "지자체 지원금",
-        description: "거주지 기준으로 받을 수 있는 지원을 확인합니다.",
-        status: "추가 확인 필요",
+        description: "현재 거주지 기준으로는 조건이 맞지 않습니다.",
+        status: "현재 해당 없음",
       },
     ],
   },
@@ -66,17 +66,17 @@ export const rightsPackages: RightsPackage[] = [
       {
         name: "첫만남 이용권",
         description: "출생 신고 후 바로 신청할 수 있습니다.",
-        status: "신청 가능성 높음",
+        status: "바로 신청 가능",
       },
       {
         name: "부모급여",
-        description: "가구 정보를 확인하면 초안을 준비할 수 있습니다.",
-        status: "신청서 초안 준비됨",
+        description: "가구 정보를 확인하면 신청 준비가 가능합니다.",
+        status: "추가 확인 필요",
       },
       {
         name: "산후조리비",
-        description: "거주지 기준 지원 여부 확인이 필요합니다.",
-        status: "추가 확인 필요",
+        description: "출산 예정일 또는 출생 신고 후 다시 알려드립니다.",
+        status: "추후 알림 필요",
       },
     ],
   },
@@ -95,13 +95,13 @@ export const rightsPackages: RightsPackage[] = [
       },
       {
         name: "돌봄 서비스",
-        description: "연령과 거주지 기준으로 신청 가능성이 높습니다.",
-        status: "신청 가능성 높음",
+        description: "연령과 거주지 기준으로 바로 신청 가능한 상태입니다.",
+        status: "바로 신청 가능",
       },
       {
         name: "교통비 지원",
-        description: "신청서 초안까지 준비할 수 있습니다.",
-        status: "신청서 초안 준비됨",
+        description: "현재 연령 기준으로는 해당하지 않습니다.",
+        status: "현재 해당 없음",
       },
     ],
   },
@@ -110,24 +110,24 @@ export const rightsPackages: RightsPackage[] = [
 export const consentItems: ConsentItem[] = [
   {
     dataName: "고용보험 이력",
-    reason: "실업급여 자격을 미리 확인하기 위해 필요합니다.",
-    purpose: "신청 가능성 사전 확인",
+    reason: "실업급여 자격과 이직 이력을 사전 확인하기 위해 필요합니다.",
+    purpose: "실업급여 및 취업지원 신청 가능성 확인",
     agency: "고용보험 관련 기관",
     period: "7일",
     revocable: true,
   },
   {
     dataName: "주민등록 정보",
-    reason: "거주지 기준 지자체 지원금을 찾기 위해 필요합니다.",
-    purpose: "지역 지원 확인",
+    reason: "거주지 기준 지자체 지원과 가구 요건을 확인하기 위해 필요합니다.",
+    purpose: "지역 지원 및 가구 기준 확인",
     agency: "주민등록 관련 기관",
-    period: "준비 완료까지",
+    period: "신청 준비 완료까지",
     revocable: true,
   },
   {
     dataName: "건강보험 자격득실",
-    reason: "보험료 조정 가능성을 확인하기 위해 필요합니다.",
-    purpose: "감면 대상 여부 확인",
+    reason: "보험료 조정 가능성과 자격 변동 여부를 확인하기 위해 필요합니다.",
+    purpose: "감면 및 자격 변동 여부 확인",
     agency: "건강보험 관련 기관",
     period: "7일",
     revocable: true,
@@ -166,8 +166,8 @@ export const finalReview = {
   documents: ["신청서 초안", "고용보험 확인 자료", "주민등록 정보"],
   targets: ["실업급여", "국민취업지원제도", "직업훈련"],
   cautions: [
-    "틀린 내용은 제출 전에 수정할 수 있습니다.",
-    "AI는 사용자 승인 없이 제출하지 않습니다.",
+    "공식 자격 판정과 처분은 소관기관 시스템이 수행합니다.",
+    "AI는 신청 준비를 도와주며, 사용자 승인 없이 제출하지 않습니다.",
   ],
 };
 
@@ -180,7 +180,7 @@ export const auditLogs: AuditLog[] = [
   {
     time: "09:12",
     title: "권리 가능성 분석",
-    detail: "신청 가능성이 높은 지원 5건을 선별했습니다.",
+    detail: "신청 가능성이 높은 지원과 추가 확인 항목을 분류했습니다.",
   },
   {
     time: "09:15",

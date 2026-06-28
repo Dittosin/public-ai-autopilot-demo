@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, CheckCircle2, FileText } from "lucide-react";
+import { AlertCircle, ArrowRight, CheckCircle2, FileText, ShieldAlert } from "lucide-react";
 import { Button } from "../components/Button";
 import { ProgressSteps } from "../components/ProgressSteps";
 import { ScreenHeader } from "../components/ScreenHeader";
@@ -17,7 +17,7 @@ export function ApplicationPrepPage({
 
   return (
     <section className="px-5 py-5">
-      <ProgressSteps current={2} />
+      <ProgressSteps current={3} />
 
       <div className="mt-5">
         <ScreenHeader
@@ -80,6 +80,19 @@ export function ApplicationPrepPage({
             </div>
           );
         })}
+      </article>
+
+      <article className="mt-3 rounded-[8px] border border-[#ffe4b5] bg-[#fff8eb] p-4">
+        <div className="flex gap-2">
+          <ShieldAlert
+            aria-hidden="true"
+            size={20}
+            className="mt-0.5 shrink-0 text-[#9a5b00]"
+          />
+          <p className="text-[13px] font-semibold leading-6 text-[#8a5200]">
+            공식 자격 판정과 처분은 소관기관 시스템이 수행합니다. AI는 신청 준비를 도와주며, 사용자 승인 없이 제출하지 않습니다.
+          </p>
+        </div>
       </article>
 
       <Button

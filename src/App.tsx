@@ -45,7 +45,7 @@ function App() {
         return (
           <ConsentPage
             simpleMode={simpleMode}
-            onStartPreparation={() => setScreen("approval")}
+            onStartPreparation={() => setScreen("application")}
           />
         );
       case "application":
