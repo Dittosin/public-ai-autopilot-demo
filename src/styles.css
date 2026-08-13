@@ -35,6 +35,11 @@ button {
   -webkit-tap-highlight-color: transparent;
 }
 
+.keep-korean {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,
@@ -101,6 +106,21 @@ textarea:focus-visible {
   border-color: #374151;
 }
 
-.high-contrast input {
+.high-contrast h1,
+.high-contrast h2,
+.high-contrast h3,
+.high-contrast .text-\[\#1f2937\] {
   color: #ffffff;
+}
+
+.high-contrast input,
+.high-contrast textarea {
+  color: #ffffff;
+  background: #111827;
+  border-color: #4b5563;
+}
+
+.high-contrast input::placeholder,
+.high-contrast textarea::placeholder {
+  color: #d1d5db;
 }

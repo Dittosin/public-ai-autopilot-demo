@@ -23,11 +23,11 @@ export function PackageDetailPage({
 
       <div className="mt-5">
         <ScreenHeader
-          eyebrow="지원 조회"
-          title="받을 수 있는 지원 5건"
+          eyebrow="행동 분류"
+          title="지금 확인할 지원 4건"
           description={
             simpleMode
-              ? "먼저 바로 신청 가능한 항목부터 보여드려요."
+              ? "지금 할 일부터 보여드려요."
               : item.subtitle
           }
         />
@@ -50,7 +50,7 @@ export function PackageDetailPage({
       <article className="app-card mt-3 rounded-[8px] px-4">
         <div className="flex items-center gap-2 border-b hairline py-4">
           <Sparkles aria-hidden="true" size={18} className="text-[#2f6bff]" />
-          <p className="text-[15px] font-extrabold">가능성 분류 결과</p>
+          <p className="text-[15px] font-extrabold">현재 상태 기준 분류</p>
         </div>
         {item.items.map((support, index) => (
           <div
@@ -82,6 +82,9 @@ export function PackageDetailPage({
       >
         목적별 동의로 이동
       </Button>
+      <p className="muted-text mt-3 text-center text-[11px] font-semibold leading-5">
+        정책명과 분류 결과는 시나리오 기반 데모 예시입니다.
+      </p>
     </section>
   );
 }

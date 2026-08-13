@@ -1,4 +1,4 @@
-const steps = ["조회", "동의", "준비", "승인"];
+const steps = ["판단", "동의", "준비", "승인"];
 
 type ProgressStepsProps = {
   current: 1 | 2 | 3 | 4;

@@ -1,13 +1,20 @@
 import { RotateCcw } from "lucide-react";
 import { Button } from "../components/Button";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { auditLogs } from "../data/mockData";
+import { auditLogs, replanAuditLogs } from "../data/mockData";
+import type { MissionPhase } from "../types";
 
 type AuditLogPageProps = {
   simpleMode: boolean;
+  missionPhase: MissionPhase;
 };
 
-export function AuditLogPage({ simpleMode }: AuditLogPageProps) {
+export function AuditLogPage({ simpleMode, missionPhase }: AuditLogPageProps) {
+  const visibleLogs =
+    missionPhase === "employmentConfirmed"
+      ? [...auditLogs, ...replanAuditLogs]
+      : auditLogs;
+
   return (
     <section className="px-5 py-5">
       <ScreenHeader
@@ -16,17 +23,17 @@ export function AuditLogPage({ simpleMode }: AuditLogPageProps) {
         description={
           simpleMode
             ? "언제 무엇을 했는지 볼 수 있어요."
-            : "조회와 신청서 준비 기록을 시간순으로 남깁니다."
+            : "상태 구성, 미션 판단, 신청 준비 기록을 시간순으로 남깁니다."
         }
       />
 
       <article className="app-card mt-5 rounded-[8px] px-4">
-        {auditLogs.map((log, index) => (
+        {visibleLogs.map((log, index) => (
           <div
             key={`${log.time}-${log.title}`}
             className={[
               "relative py-4 pl-7",
-              index < auditLogs.length - 1 ? "border-b hairline" : "",
+              index < visibleLogs.length - 1 ? "border-b hairline" : "",
             ].join(" ")}
           >
             <span className="absolute left-0 top-5 h-3 w-3 rounded-full bg-[#2f6bff]" />
@@ -50,6 +57,9 @@ export function AuditLogPage({ simpleMode }: AuditLogPageProps) {
       >
         대리권 철회
       </Button>
+      <p className="muted-text mt-3 text-center text-[11px] font-semibold leading-5">
+        표시된 기록은 데모 시나리오용 mock 데이터입니다.
+      </p>
     </section>
   );
 }

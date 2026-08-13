@@ -75,12 +75,16 @@ export function ConsentPage({
         </p>
       </div>
 
+      <p className="muted-text mt-3 text-center text-[11px] font-semibold leading-5">
+        데모에서는 실제 개인정보나 행정정보를 조회하지 않습니다.
+      </p>
+
       <Button
         onClick={onStartPreparation}
         className="mt-5 w-full"
         icon={<ArrowRight aria-hidden="true" size={20} />}
       >
-        동의하고 신청 준비
+        데모 동의하고 신청 준비
       </Button>
     </section>
   );

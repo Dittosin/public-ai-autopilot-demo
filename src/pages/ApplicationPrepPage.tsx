@@ -22,7 +22,7 @@ export function ApplicationPrepPage({
       <div className="mt-5">
         <ScreenHeader
           eyebrow="신청 준비"
-          title="초안을 준비했어요"
+          title="데모 초안을 준비했어요"
           description={
             simpleMode
               ? "부족한 서류만 확인하면 됩니다."
@@ -102,6 +102,9 @@ export function ApplicationPrepPage({
       >
         최종 확인하기
       </Button>
+      <p className="muted-text mt-3 text-center text-[11px] font-semibold leading-5">
+        실제 기관 제출이나 개인정보 전송은 이루어지지 않습니다.
+      </p>
     </section>
   );
 }

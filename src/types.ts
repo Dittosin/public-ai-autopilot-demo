@@ -10,6 +10,71 @@ export type Screen =
   | "logs"
   | "settings";
 
+export type HomeView =
+  | "entry"
+  | "goal"
+  | "mission"
+  | "direction"
+  | "support";
+
+export type MissionPhase = "planning" | "employmentConfirmed";
+
+export type ActionState = "now" | "watch" | "wait" | "drop";
+
+export type ProfileFact = {
+  label: string;
+  value: string;
+};
+
+export type UserProfile = {
+  name: string;
+  summary: string;
+  facts: ProfileFact[];
+};
+
+export type MissionAction = {
+  id: string;
+  title: string;
+  category: "취업" | "직업훈련" | "주거" | "이사" | "생활지원";
+  state: ActionState;
+  description: string;
+  reason: string;
+  nextCheck?: string;
+  canPrepare?: boolean;
+  changeNote?: string;
+  demoExample?: boolean;
+};
+
+export type Mission = {
+  id: string;
+  title: string;
+  userGoal: string;
+  summary: string;
+  updatedLabel: string;
+  nextAction: string;
+  actions: MissionAction[];
+};
+
+export type ReplanResult = {
+  eventTitle: string;
+  title: string;
+  description: string;
+  highlights: string[];
+  nextAction: string;
+};
+
+export type PublicConnectionItem = {
+  name: string;
+  purpose: string;
+  source: string;
+};
+
+export type DirectionOption = {
+  title: string;
+  description: string;
+  considerations: string[];
+};
+
 export type PackageStatus =
   | "바로 신청 가능"
   | "추가 확인 필요"

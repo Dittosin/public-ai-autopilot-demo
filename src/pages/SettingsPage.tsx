@@ -70,7 +70,7 @@ export function SettingsPage({
             <div>
               <p className="text-[17px] font-extrabold">내 마이데이터 관리</p>
               <p className="muted-text mt-1 text-[13px] font-medium leading-5">
-                AI가 확인한 개인정보와 사용 기간을 관리합니다.
+                목적별로 연결하도록 동의한 정보와 사용 기간을 관리합니다.
               </p>
             </div>
           </div>
@@ -145,6 +145,10 @@ export function SettingsPage({
           <Mic aria-hidden="true" size={21} />
         </div>
       </article>
+
+      <p className="muted-text mt-4 text-center text-[11px] font-semibold leading-5">
+        데모에서는 실제 정보를 저장하거나 외부로 전송하지 않습니다.
+      </p>
     </section>
   );
 }

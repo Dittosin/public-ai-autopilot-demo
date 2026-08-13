@@ -17,7 +17,7 @@ export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps
       <div className="mt-5">
         <ScreenHeader
           eyebrow="최종 승인"
-          title="확인하면 제출됩니다"
+          title="제출 전 마지막 확인"
           description={
             simpleMode
               ? "직접 승인해야 제출됩니다."
@@ -51,12 +51,15 @@ export function FinalApprovalPage({ simpleMode, onLogs }: FinalApprovalPageProps
           className="w-full"
           icon={<LockKeyhole aria-hidden="true" size={20} />}
         >
-          본인인증 후 최종 제출
+          본인인증 후 최종 제출 (데모)
         </Button>
         <Button variant="secondary" onClick={onLogs} className="w-full">
           기록 보기
         </Button>
       </div>
+      <p className="muted-text mt-3 text-center text-[11px] font-semibold leading-5">
+        이 버튼은 시연용이며 실제 기관으로 제출되지 않습니다.
+      </p>
     </section>
   );
 }

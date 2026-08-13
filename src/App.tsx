@@ -8,17 +8,19 @@ import { HomePage } from "./pages/HomePage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { PackageDetailPage } from "./pages/PackageDetailPage";
 import { SettingsPage } from "./pages/SettingsPage";
-import type { Screen } from "./types";
+import type { HomeView, MissionPhase, Screen } from "./types";
 
 function App() {
   const [screen, setScreen] = useState<Screen>("onboarding");
   const [largeText, setLargeText] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
   const [simpleMode, setSimpleMode] = useState(false);
+  const [homeView, setHomeView] = useState<HomeView>("entry");
+  const [missionPhase, setMissionPhase] = useState<MissionPhase>("planning");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, [screen]);
+  }, [screen, homeView]);
 
   const page = (() => {
     switch (screen) {
@@ -28,6 +30,15 @@ function App() {
         return (
           <HomePage
             simpleMode={simpleMode}
+            view={homeView}
+            missionPhase={missionPhase}
+            onChangeView={setHomeView}
+            onCreateMission={() => {
+              setMissionPhase("planning");
+              setHomeView("mission");
+            }}
+            onConfirmEmployment={() => setMissionPhase("employmentConfirmed")}
+            onResetMission={() => setMissionPhase("planning")}
             onOpenPackage={() => setScreen("package")}
             onOpenConsent={() => setScreen("consent")}
             onOpenLogs={() => setScreen("logs")}
@@ -63,7 +74,12 @@ function App() {
           />
         );
       case "logs":
-        return <AuditLogPage simpleMode={simpleMode} />;
+        return (
+          <AuditLogPage
+            simpleMode={simpleMode}
+            missionPhase={missionPhase}
+          />
+        );
       case "settings":
         return (
           <SettingsPage
