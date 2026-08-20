@@ -25,7 +25,8 @@ export function BottomNav({ currentScreen, onNavigate }: BottomNavProps) {
           const active =
             currentScreen === tab.key ||
             (tab.key === "package" &&
-              ["consent", "application", "approval"].includes(currentScreen));
+              ["consent", "application", "approval"].includes(currentScreen)) ||
+            (tab.key === "settings" && currentScreen === "trust");
 
           return (
             <button

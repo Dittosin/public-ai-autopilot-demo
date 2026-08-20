@@ -8,7 +8,8 @@ export type Screen =
   | "application"
   | "approval"
   | "logs"
-  | "settings";
+  | "settings"
+  | "trust";
 
 export type HomeView =
   | "goal"

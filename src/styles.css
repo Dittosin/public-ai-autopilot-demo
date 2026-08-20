@@ -150,6 +150,24 @@ summary:focus-visible {
   color: #d1d5db;
 }
 
+.high-contrast .trust-center .text-\[\#374151\],
+.high-contrast .trust-center .text-\[\#4b5563\],
+.high-contrast .trust-center .text-\[\#6b7280\],
+.high-contrast .trust-center .text-\[\#9ca3af\] {
+  color: #e5e7eb;
+}
+
+.high-contrast .trust-center .bg-\[\#f8fafc\],
+.high-contrast .trust-center .bg-\[\#f7f8fa\],
+.high-contrast .trust-center .bg-\[\#f3f6fb\],
+.high-contrast .trust-center .bg-\[\#f0f3f7\] {
+  background: #1f2937;
+}
+
+.high-contrast .trust-center .bg-\[\#edf8f3\] {
+  background: #0f2f27;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

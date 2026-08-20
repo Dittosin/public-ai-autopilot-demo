@@ -8,6 +8,7 @@ import { HomePage } from "./pages/HomePage";
 import { OnboardingPage } from "./pages/OnboardingPage";
 import { PackageDetailPage } from "./pages/PackageDetailPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { TrustCenterPage } from "./pages/TrustCenterPage";
 import type { HomeView, MissionPhase, Screen } from "./types";
 
 function App() {
@@ -97,6 +98,15 @@ function App() {
             onToggleHighContrast={() => setHighContrast((value) => !value)}
             onToggleSimpleMode={() => setSimpleMode((value) => !value)}
             onOpenGuide={() => setScreen("onboarding")}
+            onOpenLogs={() => setScreen("logs")}
+            onOpenTrustCenter={() => setScreen("trust")}
+          />
+        );
+      case "trust":
+        return (
+          <TrustCenterPage
+            onBack={() => setScreen("settings")}
+            onOpenLogs={() => setScreen("logs")}
           />
         );
       default:

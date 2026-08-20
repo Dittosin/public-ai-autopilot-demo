@@ -4,7 +4,6 @@ import {
   ChevronRight,
   Database,
   Eye,
-  Flag,
   Mic,
   Moon,
   ShieldCheck,
@@ -21,6 +20,8 @@ type SettingsPageProps = {
   onToggleHighContrast: () => void;
   onToggleSimpleMode: () => void;
   onOpenGuide: () => void;
+  onOpenLogs: () => void;
+  onOpenTrustCenter: () => void;
 };
 
 export function SettingsPage({
@@ -31,6 +32,8 @@ export function SettingsPage({
   onToggleHighContrast,
   onToggleSimpleMode,
   onOpenGuide,
+  onOpenLogs,
+  onOpenTrustCenter,
 }: SettingsPageProps) {
   return (
     <section className="px-5 py-5">
@@ -131,6 +134,7 @@ export function SettingsPage({
 
         <button
           type="button"
+          onClick={onOpenLogs}
           className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-[8px] bg-[#f3f6fb] px-4 text-[14px] font-extrabold text-[#1f2937]"
         >
           <ShieldCheck aria-hidden="true" size={18} />
@@ -150,42 +154,24 @@ export function SettingsPage({
         </div>
       </article>
 
-      <details className="app-card mt-3 rounded-[8px] px-4">
-        <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between">
-          <span className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
-              <ShieldCheck aria-hidden="true" size={21} />
-            </span>
-            <span>
-              <span className="block text-[16px] font-extrabold">안전·신뢰센터</span>
-              <span className="muted-text mt-1 block text-[13px] font-medium">
-                AI와 개인정보 이용 원칙
-              </span>
+      <button
+        type="button"
+        onClick={onOpenTrustCenter}
+        className="app-card mt-3 flex min-h-[76px] w-full items-center justify-between rounded-[8px] p-4 text-left hover:bg-[#fbfcff]"
+      >
+        <span className="flex min-w-0 items-center gap-3">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
+            <ShieldCheck aria-hidden="true" size={21} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[16px] font-extrabold">안전·신뢰센터</span>
+            <span className="muted-text mt-1 block text-[13px] font-medium">
+              AI의 역할, 승인, 데이터 원칙을 확인합니다.
             </span>
           </span>
-          <ChevronRight aria-hidden="true" size={19} className="text-[#6b7280]" />
-        </summary>
-        <div className="border-t hairline pb-4 pt-3">
-          {[
-            "AI는 다음 행동과 신청 준비를 돕습니다.",
-            "최종 자격과 처분은 해당 기관이 결정합니다.",
-            "사용자 승인 없이 신청을 제출하지 않습니다.",
-            "데모에서는 개인정보를 저장하거나 전송하지 않습니다.",
-          ].map((item) => (
-            <p key={item} className="muted-text flex items-start gap-2 py-1.5 text-[13px] font-medium leading-5">
-              <ShieldCheck aria-hidden="true" size={15} className="mt-0.5 shrink-0 text-[#2f6bff]" />
-              {item}
-            </p>
-          ))}
-          <button
-            type="button"
-            className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[#f3f6fb] px-4 text-[13px] font-extrabold text-[#4b5563]"
-          >
-            <Flag aria-hidden="true" size={17} />
-            오류·보안 문제 신고 안내
-          </button>
-        </div>
-      </details>
+        </span>
+        <ChevronRight aria-hidden="true" size={19} className="shrink-0 text-[#6b7280]" />
+      </button>
 
       <button
         type="button"
