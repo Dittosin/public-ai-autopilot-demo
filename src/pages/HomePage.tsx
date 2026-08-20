@@ -1,15 +1,12 @@
-import { useState, type FormEvent } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import {
   ArrowLeft,
   ArrowRight,
   Check,
   ChevronDown,
   CircleDot,
-  Clock3,
   Compass,
   Eye,
-  FileText,
-  Flag,
   Hourglass,
   Lightbulb,
   MessageCircle,
@@ -29,12 +26,10 @@ import {
   missionBefore,
   replanResult,
   rightsPackages,
-  userProfile,
 } from "../data/mockData";
 import type {
   ActionState,
   HomeView,
-  Mission,
   MissionAction,
   MissionPhase,
 } from "../types";
@@ -54,34 +49,29 @@ type HomePageProps = {
 };
 
 export function HomePage(props: HomePageProps) {
-  const { view } = props;
-
-  if (view === "entry") {
-    return <EntryChoices onChangeView={props.onChangeView} />;
-  }
-
-  if (view === "goal") {
+  if (props.view === "goal") {
     return (
       <GoalComposer
-        onBack={() => props.onChangeView("entry")}
         onCreateMission={props.onCreateMission}
+        onFindDirection={() => props.onChangeView("direction")}
+        onBrowseSupport={() => props.onChangeView("support")}
       />
     );
   }
 
-  if (view === "direction") {
+  if (props.view === "direction") {
     return (
       <DirectionFinder
-        onBack={() => props.onChangeView("entry")}
+        onBack={() => props.onChangeView("goal")}
         onCreateMission={props.onCreateMission}
       />
     );
   }
 
-  if (view === "support") {
+  if (props.view === "support") {
     return (
       <SupportExplorer
-        onBack={() => props.onChangeView("entry")}
+        onBack={() => props.onChangeView("goal")}
         onOpenPackage={props.onOpenPackage}
         onOpenConsent={props.onOpenConsent}
         onCreateMission={props.onCreateMission}
@@ -92,123 +82,28 @@ export function HomePage(props: HomePageProps) {
   return <MissionBoard {...props} />;
 }
 
-function EntryChoices({ onChangeView }: { onChangeView: (view: HomeView) => void }) {
-  const choices = [
-    {
-      title: "하고 싶은 일이 있어요",
-      description: "취업·독립처럼 앞으로 하고 싶은 일을 알려주세요.",
-      icon: Target,
-      view: "goal" as const,
-      primary: true,
-    },
-    {
-      title: "AI와 같이 방향을 찾고 싶어요",
-      description: "현재 상황을 바탕으로 선택지를 함께 살펴봅니다.",
-      icon: Compass,
-      view: "direction" as const,
-      primary: false,
-    },
-    {
-      title: "일단 받을 수 있는 걸 보고 싶어요",
-      description: "지금 확인할 가치가 있는 지원부터 찾아봅니다.",
-      icon: Search,
-      view: "support" as const,
-      primary: false,
-    },
-  ];
-
-  return (
-    <section className="px-5 py-6">
-      <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
-        <Sparkles aria-hidden="true" size={16} />
-        확인된 현재 상태를 기억하고 있어요
-      </div>
-      <h1 className="keep-korean mt-3 text-[29px] font-extrabold leading-[1.22]">
-        오늘은 무엇부터
-        <br />
-        같이 해볼까요?
-      </h1>
-      <p className="muted-text mt-3 text-[15px] font-semibold leading-6">
-        이미 확인된 정보는 다시 묻지 않고, 지금 할 수 있는 일부터 시작합니다.
-      </p>
-
-      <article className="surface mt-5 flex items-center gap-3 rounded-[8px] border border-[#dce8ff] bg-[#f7faff] px-4 py-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#2f6bff] text-white">
-          <UserRoundSearch aria-hidden="true" size={18} />
-        </div>
-        <div className="min-w-0">
-          <p className="text-[13px] font-extrabold">{userProfile.name}님의 현재 상태</p>
-          <p className="muted-text mt-0.5 truncate text-[12px] font-medium">
-            만 24세 · 졸업예정 · 미취업 · 부모와 거주
-          </p>
-        </div>
-      </article>
-
-      <div className="mt-4 space-y-3">
-        {choices.map((choice) => {
-          const Icon = choice.icon;
-          return (
-            <button
-              key={choice.title}
-              type="button"
-              onClick={() => onChangeView(choice.view)}
-              className={[
-                "surface flex min-h-[104px] w-full items-center gap-4 rounded-[8px] border p-4 text-left shadow-[0_8px_22px_rgba(31,41,55,0.05)] transition active:scale-[0.99]",
-                choice.primary
-                  ? "border-[#b9ceff] bg-white"
-                  : "border-[#e9eef5] bg-white",
-              ].join(" ")}
-            >
-              <span
-                className={[
-                  "flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px]",
-                  choice.primary
-                    ? "bg-[#2f6bff] text-white"
-                    : "bg-[#eef4ff] text-[#2f6bff]",
-                ].join(" ")}
-              >
-                <Icon aria-hidden="true" size={23} />
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block text-[17px] font-extrabold">{choice.title}</span>
-                <span className="muted-text mt-1 block text-[13px] font-medium leading-5">
-                  {choice.description}
-                </span>
-              </span>
-              <ArrowRight aria-hidden="true" size={19} className="shrink-0 text-[#9ca3af]" />
-            </button>
-          );
-        })}
-      </div>
-
-      <p className="muted-text mt-5 text-center text-[12px] font-semibold leading-5">
-        데모에서는 실제 개인정보나 행정정보를 조회하지 않습니다.
-      </p>
-    </section>
-  );
-}
-
 function GoalComposer({
-  onBack,
   onCreateMission,
+  onFindDirection,
+  onBrowseSupport,
 }: {
-  onBack: () => void;
   onCreateMission: () => void;
+  onFindDirection: () => void;
+  onBrowseSupport: () => void;
 }) {
   const [goal, setGoal] = useState(missionBefore.userGoal);
 
   return (
-    <section className="px-5 py-5">
-      <BackButton onClick={onBack} />
-      <div className="mt-5">
-        <p className="text-[12px] font-extrabold text-[#2f6bff]">새 목표</p>
-        <h1 className="keep-korean mt-2 text-[28px] font-extrabold leading-[1.22]">
-          앞으로 하고 싶은 일을
-          <br />
-          편하게 말해주세요
+    <section className="px-5 py-6">
+      <div>
+        <p className="text-[12px] font-extrabold text-[#2f6bff]">
+          정책을 추천하는 AI가 아니라, 다음 할 일을 찾는 AI
+        </p>
+        <h1 className="keep-korean mt-3 text-[31px] font-extrabold leading-[1.18]">
+          무엇을 이루고 싶나요?
         </h1>
-        <p className="muted-text mt-3 text-[14px] font-semibold leading-6">
-          이미 확인된 현재 상태와 연결해 지속적으로 관리할 미션으로 바꿉니다.
+        <p className="muted-text mt-3 text-[15px] font-semibold leading-6">
+          목표를 말하면 지금 할 일과 기다릴 일을 하나의 미션으로 관리해요.
         </p>
       </div>
 
@@ -220,13 +115,15 @@ function GoalComposer({
         }}
       >
         <label htmlFor="mission-goal" className="text-[13px] font-extrabold text-[#2f6bff]">
-          내 목표
+          이루고 싶은 목표
         </label>
         <textarea
           id="mission-goal"
+          name="mission-goal"
+          autoComplete="off"
           value={goal}
           onChange={(event) => setGoal(event.target.value)}
-          rows={4}
+          rows={3}
           className="mt-3 w-full resize-none rounded-[8px] border border-[#dfe6ef] bg-[#f9fbfd] p-4 text-[18px] font-bold leading-7 text-[#1f2937] outline-none"
         />
         <div className="mt-3 flex items-center gap-2 text-[12px] font-bold text-[#6b7280]">
@@ -239,16 +136,47 @@ function GoalComposer({
           disabled={!goal.trim()}
           icon={<Sparkles aria-hidden="true" size={19} />}
         >
-          AI 미션 만들기
+          이 목표로 미션 시작
         </Button>
       </form>
 
-      <div className="surface mt-4 rounded-[8px] bg-[#eef4ff] p-4">
-        <p className="text-[13px] font-extrabold text-[#1e4ed8]">다시 묻지 않는 정보</p>
-        <p className="mt-1 text-[13px] font-semibold leading-5 text-[#31569b]">
-          만 24세 · 졸업예정 · 수도권 거주 · 현재 미취업 · 부모와 거주
-        </p>
+      <div className="surface mt-4 flex items-center gap-3 rounded-[8px] border hairline bg-white px-4 py-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#eef4ff] text-[#2f6bff]">
+          <UserRoundSearch aria-hidden="true" size={18} />
+        </div>
+        <div className="min-w-0">
+          <p className="text-[12px] font-extrabold">확인된 현재 상태</p>
+          <p className="muted-text mt-0.5 text-[12px] font-medium leading-5">
+            24세 · 졸업예정 · 미취업 · 부모와 거주
+          </p>
+        </div>
       </div>
+
+      <div className="mt-5 border-t hairline pt-4">
+        <p className="muted-text text-center text-[12px] font-bold">
+          목표가 아직 선명하지 않다면
+        </p>
+        <div className="mt-2 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            onClick={onFindDirection}
+            className="min-h-12 rounded-[8px] bg-[#f3f6fb] px-3 text-[13px] font-extrabold text-[#4b5563]"
+          >
+            AI와 같이 목표 정하기
+          </button>
+          <button
+            type="button"
+            onClick={onBrowseSupport}
+            className="min-h-12 rounded-[8px] bg-[#f3f6fb] px-3 text-[13px] font-extrabold text-[#4b5563]"
+          >
+            지금 받을 지원 보기
+          </button>
+        </div>
+      </div>
+
+      <p className="muted-text mt-5 text-center text-[11px] font-semibold leading-5">
+        시연용 프로토타입으로 실제 개인정보·공공 마이데이터·행정시스템과 연계되지 않습니다.
+      </p>
     </section>
   );
 }
@@ -264,15 +192,16 @@ function DirectionFinder({
     <section className="px-5 py-5">
       <BackButton onClick={onBack} />
       <div className="mt-5">
-        <p className="text-[12px] font-extrabold text-[#2f6bff]">AI와 방향 찾기</p>
+        <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
+          <Compass aria-hidden="true" size={16} />
+          AI와 목표 정하기
+        </div>
         <h1 className="keep-korean mt-2 text-[27px] font-extrabold leading-[1.25]">
-          선택에 따라 달라지는 일을
-          <br />
-          나란히 살펴봤어요
+          선택에 따라 달라지는 일을 나란히 살펴봤어요
         </h1>
       </div>
 
-      <div className="mt-5 rounded-[8px] bg-[#2f6bff] px-4 py-4 text-white">
+      <div className="mt-5 rounded-[8px] bg-[#244fc7] px-4 py-4 text-white">
         <p className="text-[12px] font-bold text-white/75">고민 예시</p>
         <p className="mt-1 text-[16px] font-extrabold leading-6">
           “서울에서 취업하고 독립할지, 본가에서 취업 준비를 계속할지 고민돼.”
@@ -317,7 +246,7 @@ function DirectionFinder({
         className="mt-5 w-full"
         icon={<Target aria-hidden="true" size={19} />}
       >
-        취업하고 독립하기 미션 만들기
+        서울 취업 + 독립 미션 만들기
       </Button>
     </section>
   );
@@ -341,13 +270,13 @@ function SupportExplorer({
     <section className="px-5 py-5">
       <BackButton onClick={onBack} />
       <div className="mt-5">
-        <p className="text-[12px] font-extrabold text-[#2f6bff]">현재 상태 기준</p>
+        <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
+          <Search aria-hidden="true" size={16} />
+          현재 상태 기준
+        </div>
         <h1 className="keep-korean mt-2 text-[28px] font-extrabold leading-[1.22]">
           지금 확인할 가치가 있는 지원
         </h1>
-        <p className="muted-text mt-3 text-[14px] font-semibold leading-6">
-          많은 목록 대신, 행동 시점에 따라 네 가지로 정리했습니다.
-        </p>
       </div>
 
       <article className="app-card mt-5 rounded-[8px] px-4">
@@ -370,7 +299,7 @@ function SupportExplorer({
                 </div>
                 <ActionStatePill state={state} />
               </div>
-              {state === "now" && index === 0 ? (
+              {index === 0 ? (
                 <button
                   type="button"
                   onClick={onOpenConsent}
@@ -402,87 +331,84 @@ function SupportExplorer({
 }
 
 function MissionBoard({
-  simpleMode,
   missionPhase,
   onChangeView,
   onConfirmEmployment,
   onResetMission,
-  onOpenConsent,
+  onOpenPackage,
   onOpenLogs,
   onOpenSettings,
 }: HomePageProps) {
   const [replanning, setReplanning] = useState(false);
   const mission = missionPhase === "employmentConfirmed" ? missionAfter : missionBefore;
+  const primaryAction = getActions(mission, "now")[0];
+  const watchAction = getActions(mission, "watch")[0];
+  const waitAction = getActions(mission, "wait")[0];
+  const visibleIds = new Set([primaryAction.id, watchAction.id, waitAction.id]);
+  const remainingActions = mission.actions.filter((action) => !visibleIds.has(action.id));
 
   function runReplan() {
     setReplanning(true);
     window.setTimeout(() => {
       onConfirmEmployment();
       setReplanning(false);
-    }, 800);
+    }, 900);
   }
 
   return (
     <section className="px-5 py-5">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <p className="text-[12px] font-extrabold text-[#2f6bff]">내 미션</p>
-          <h1 className="mt-1 text-[28px] font-extrabold leading-[1.2]">
-            {mission.title}
-          </h1>
+      <div>
+        <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
+          <Target aria-hidden="true" size={16} />
+          내 미션 · 계속 관리 중
         </div>
-        <span className="shrink-0 rounded-full bg-[#eaf7f1] px-2.5 py-1.5 text-[11px] font-extrabold text-[#0f7b55]">
-          계속 관리 중
-        </span>
+        <h1 className="keep-korean mt-2 text-[28px] font-extrabold leading-[1.2]">
+          {mission.title}
+        </h1>
+        <p className="muted-text mt-2 text-[13px] font-semibold leading-5">
+          {missionPhase === "employmentConfirmed"
+            ? "24세 · 졸업예정 · 취업 확정 · 강남 · 12월 출근"
+            : "24세 · 졸업예정 · 미취업 · 부모와 거주"}
+        </p>
       </div>
-
-      <article className="mt-4 overflow-hidden rounded-[8px] bg-[#244fc7] text-white shadow-[0_16px_34px_rgba(36,79,199,0.2)]">
-        <div className="p-5">
-          <div className="flex items-center gap-2 text-[12px] font-bold text-white/75">
-            <Target aria-hidden="true" size={16} />
-            {mission.updatedLabel}
-          </div>
-          <p className="mt-3 text-[20px] font-extrabold leading-7">
-            {mission.nextAction}
-          </p>
-          {!simpleMode ? (
-            <p className="mt-3 text-[13px] font-medium leading-5 text-white/75">
-              {mission.summary}
-            </p>
-          ) : null}
-        </div>
-        <div className="grid grid-cols-3 border-t border-white/15 bg-black/5 px-4 py-3 text-center">
-          <MissionMetric label="지금 할 일" value={countActions(mission, "now")} />
-          <MissionMetric label="지켜보는 중" value={countActions(mission, "watch")} />
-          <MissionMetric label="조건 대기" value={countActions(mission, "wait")} />
-        </div>
-      </article>
 
       {missionPhase === "employmentConfirmed" ? (
         <ReplanSummary onReset={onResetMission} />
-      ) : (
-        <ReplanTrigger loading={replanning} onRun={runReplan} />
-      )}
+      ) : null}
 
-      <div className="mt-6 space-y-4">
-        <MissionGroup
-          state="now"
-          actions={getActions(mission, "now")}
-          onPrepare={onOpenConsent}
-          expanded
+      <PrimaryActionCard action={primaryAction} onOpen={onOpenPackage} />
+
+      <div className="mt-3 space-y-2">
+        <SupportingAction
+          icon={<Eye aria-hidden="true" size={18} />}
+          label="AI가 지켜보는 중"
+          action={watchAction}
+          tone="mint"
         />
-        <MissionGroup state="watch" actions={getActions(mission, "watch")} />
-        <MissionGroup state="wait" actions={getActions(mission, "wait")} />
+        <SupportingAction
+          icon={<Hourglass aria-hidden="true" size={18} />}
+          label="나중에 다시 확인"
+          action={waitAction}
+          tone="amber"
+        />
       </div>
 
-      <details className="surface mt-4 rounded-[8px] border hairline bg-white px-4">
+      {missionPhase === "planning" ? (
+        <ReplanTrigger loading={replanning} onRun={runReplan} />
+      ) : null}
+
+      <details className="surface mt-3 rounded-[8px] border hairline bg-white px-4">
         <summary className="flex min-h-12 cursor-pointer list-none items-center justify-between text-[13px] font-extrabold text-[#6b7280]">
-          지금은 제외한 항목 보기
+          다른 관리 항목 {remainingActions.length}개 보기
           <ChevronDown aria-hidden="true" size={17} />
         </summary>
-        <div className="border-t hairline pb-3 pt-1">
-          {getActions(mission, "drop").map((action) => (
-            <MissionActionRow key={action.id} action={action} />
+        <div className="border-t hairline pb-2">
+          {remainingActions.map((action, index) => (
+            <CompactAction
+              key={action.id}
+              action={action}
+              last={index === remainingActions.length - 1}
+            />
           ))}
         </div>
       </details>
@@ -495,136 +421,113 @@ function MissionBoard({
         onOpenSettings={onOpenSettings}
       />
 
-      <article className="app-card mt-4 rounded-[8px] p-4">
-        <p className="text-[16px] font-extrabold">다른 계획이 생겼나요?</p>
-        <p className="muted-text mt-1 text-[13px] font-medium leading-5">
-          목표는 언제든 바꾸거나 새로 시작할 수 있어요.
-        </p>
-        <div className="mt-3 grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => onChangeView("goal")}
-            className="min-h-11 rounded-[8px] bg-[#eef4ff] px-3 text-[13px] font-extrabold text-[#2f6bff]"
-          >
-            새 미션 만들기
-          </button>
-          <button
-            type="button"
-            onClick={() => onChangeView("direction")}
-            className="min-h-11 rounded-[8px] bg-[#f3f6fb] px-3 text-[13px] font-extrabold text-[#4b5563]"
-          >
-            AI와 같이 고민하기
-          </button>
-        </div>
-      </article>
+      <div className="mt-4 flex items-center justify-between border-t hairline pt-4">
+        <p className="text-[13px] font-bold text-[#6b7280]">다른 계획이 생겼나요?</p>
+        <button
+          type="button"
+          onClick={() => onChangeView("goal")}
+          className="min-h-10 rounded-[8px] px-3 text-[13px] font-extrabold text-[#2f6bff]"
+        >
+          새 미션 만들기
+        </button>
+      </div>
 
-      <p className="muted-text mt-5 text-center text-[11px] font-semibold leading-5">
+      <p className="muted-text mt-4 text-center text-[11px] font-semibold leading-5">
         정책명과 판단 결과는 시나리오 기반 데모 예시이며 실제 자격 판정이 아닙니다.
       </p>
     </section>
   );
 }
 
-function MissionGroup({
-  state,
-  actions,
-  onPrepare,
-  expanded = false,
-}: {
-  state: ActionState;
-  actions: MissionAction[];
-  onPrepare?: () => void;
-  expanded?: boolean;
-}) {
-  const config = actionStateConfig[state];
-  const Icon = config.icon;
-
+function PrimaryActionCard({ action, onOpen }: { action: MissionAction; onOpen: () => void }) {
   return (
-    <article className="app-card overflow-hidden rounded-[8px]">
-      <div className={['flex items-center justify-between px-4 py-3', config.header].join(' ')}>
-        <div className="flex items-center gap-2">
-          <Icon aria-hidden="true" size={18} />
-          <div>
-            <p className="text-[14px] font-extrabold">
-              {config.label} · {config.title}
-            </p>
-            <p className="mt-0.5 text-[11px] font-semibold opacity-75">{config.description}</p>
-          </div>
+    <article className="mt-5 overflow-hidden rounded-[8px] bg-[#244fc7] text-white shadow-[0_16px_34px_rgba(36,79,199,0.2)]">
+      <div className="p-5">
+        <div className="flex items-center gap-2 text-[13px] font-extrabold text-white/80">
+          <CircleDot aria-hidden="true" size={17} />
+          지금 할 일
         </div>
-        <span className="text-[13px] font-extrabold">{actions.length}</span>
-      </div>
-      <div className="px-4">
-        {actions.map((action, index) => (
-          <div
-            key={action.id}
-            className={index < actions.length - 1 ? "border-b hairline" : ""}
-          >
-            <MissionActionRow
-              action={action}
-              onPrepare={action.canPrepare ? onPrepare : undefined}
-              showDescription={expanded}
-            />
-          </div>
-        ))}
+        <h2 className="keep-korean mt-3 text-[22px] font-extrabold leading-7 text-white">
+          {action.title}
+        </h2>
+        <p className="mt-2 text-[13px] font-medium leading-5 text-white/75">
+          {action.description}
+        </p>
+        <details className="mt-2">
+          <summary className="flex min-h-9 cursor-pointer list-none items-center gap-1 text-[12px] font-extrabold text-white/85">
+            왜 이걸 먼저 하나요?
+            <ChevronDown aria-hidden="true" size={15} />
+          </summary>
+          <p className="rounded-[8px] bg-white/10 px-3 py-3 text-[12px] font-medium leading-5 text-white/90">
+            {action.reason}
+          </p>
+        </details>
+        <Button
+          variant="inverse"
+          onClick={onOpen}
+          className="mt-3 w-full"
+          icon={<ArrowRight aria-hidden="true" size={18} />}
+        >
+          확인하기
+        </Button>
       </div>
     </article>
   );
 }
 
-function MissionActionRow({
+function SupportingAction({
+  icon,
+  label,
   action,
-  onPrepare,
-  showDescription = true,
+  tone,
 }: {
+  icon: ReactNode;
+  label: string;
   action: MissionAction;
-  onPrepare?: () => void;
-  showDescription?: boolean;
+  tone: "mint" | "amber";
 }) {
+  const toneStyles =
+    tone === "mint"
+      ? "bg-[#edf8f5] text-[#0f7b68]"
+      : "bg-[#fff7e9] text-[#9a5b00]";
+
   return (
-    <div className="py-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-2">
-            <p className="text-[15px] font-extrabold">{action.title}</p>
-            {action.changeNote ? (
-              <span className="rounded-full bg-[#eaf7f1] px-2 py-0.5 text-[10px] font-extrabold text-[#0f7b55]">
-                {action.changeNote}
-              </span>
-            ) : null}
-          </div>
-          {showDescription ? (
-            <p className="muted-text mt-1 text-[13px] font-medium leading-5">
-              {action.description}
-            </p>
-          ) : null}
+    <details className="app-card rounded-[8px] px-4 py-3">
+      <summary className="flex min-h-10 cursor-pointer list-none items-center gap-3">
+        <div className={["flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px]", toneStyles].join(" ")}>
+          {icon}
         </div>
+        <div className="min-w-0 flex-1">
+          <p className="text-[11px] font-extrabold text-[#6b7280]">{label}</p>
+          <p className="mt-0.5 truncate text-[14px] font-extrabold">{action.title}</p>
+        </div>
+        <ChevronDown aria-hidden="true" size={17} className="shrink-0 text-[#6b7280]" />
+      </summary>
+      <p className="surface mt-2 rounded-[8px] bg-[#f7f9fc] px-3 py-3 text-[12px] font-medium leading-5 text-[#4b5563]">
+        {action.reason}
+      </p>
+    </details>
+  );
+}
+
+function CompactAction({ action, last }: { action: MissionAction; last: boolean }) {
+  const stateLabel = {
+    now: "지금 할 일",
+    watch: "지켜보는 중",
+    wait: "나중에 확인",
+    drop: "우선순위 낮음",
+  }[action.state];
+
+  return (
+    <div className={["py-3", last ? "" : "border-b hairline"].join(" ")}>
+      <div className="flex items-start justify-between gap-3">
+        <p className="text-[13px] font-extrabold">{action.title}</p>
         <span className="shrink-0 rounded-full bg-[#f3f6fb] px-2 py-1 text-[10px] font-bold text-[#6b7280]">
-          {action.category}
+          {stateLabel}
         </span>
       </div>
-
-      <details className="mt-2">
-        <summary className="flex min-h-9 cursor-pointer list-none items-center gap-1 text-[12px] font-extrabold text-[#2f6bff]">
-          왜 이렇게 판단했나요?
-          <ChevronDown aria-hidden="true" size={15} />
-        </summary>
-        <div className="surface rounded-[8px] bg-[#f7f9fc] px-3 py-3 text-[12px] font-medium leading-5 text-[#4b5563]">
-          <p>{action.reason}</p>
-          {action.nextCheck ? (
-            <p className="mt-2 font-extrabold text-[#2f6bff]">다시 확인: {action.nextCheck}</p>
-          ) : null}
-        </div>
-      </details>
-
-      {onPrepare ? (
-        <button
-          type="button"
-          onClick={onPrepare}
-          className="mt-2 flex min-h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[#2f6bff] px-4 text-[13px] font-extrabold text-white"
-        >
-          <FileText aria-hidden="true" size={17} />
-          신청 준비
-        </button>
+      {action.changeNote ? (
+        <p className="mt-1 text-[11px] font-bold text-[#0f7b55]">{action.changeNote}</p>
       ) : null}
     </div>
   );
@@ -632,26 +535,21 @@ function MissionActionRow({
 
 function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void }) {
   return (
-    <article className="surface mt-4 rounded-[8px] border border-[#dce8ff] bg-[#f7faff] p-4">
-      <div className="flex items-start gap-3">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-[8px] bg-[#eef4ff] text-[#2f6bff]">
-          <Clock3 aria-hidden="true" size={20} />
-        </div>
-        <div>
-          <p className="text-[15px] font-extrabold">상황 변화 체험하기</p>
-          <p className="muted-text mt-1 text-[12px] font-medium leading-5">
-            취업 상태가 바뀌면 AI가 미션 전체를 다시 판단합니다.
-          </p>
-        </div>
-      </div>
+    <article className="mt-3 rounded-[8px] bg-[#18233a] p-4 text-white" aria-live="polite">
+      <p className="text-[11px] font-extrabold text-white/60">핵심 기능 체험</p>
+      <p className="mt-1 text-[15px] font-extrabold">
+        상황이 바뀌면 다음 할 일도 바뀝니다
+      </p>
       <button
         type="button"
         onClick={onRun}
         disabled={loading}
-        className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-[8px] bg-white px-4 text-[13px] font-extrabold text-[#2f6bff] shadow-sm disabled:opacity-70"
+        className="mt-3 flex min-h-[52px] w-full items-center justify-center gap-2 rounded-[8px] bg-white px-4 text-[13px] font-extrabold text-[#18233a] shadow-sm disabled:opacity-70"
       >
         <RefreshCw aria-hidden="true" size={17} className={loading ? "animate-spin" : ""} />
-        {loading ? "미션 전체를 다시 판단하는 중..." : "3개월 후: 취업이 확정됐어요"}
+        {loading
+          ? "취업 상태를 반영해 미션을 다시 확인하고 있어요…"
+          : "취업했어. 강남에서 12월부터 출근해."}
       </button>
     </article>
   );
@@ -659,35 +557,39 @@ function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void
 
 function ReplanSummary({ onReset }: { onReset: () => void }) {
   return (
-    <article className="surface mt-4 overflow-hidden rounded-[8px] border border-[#b9dcd0] bg-[#f2fbf7]" aria-live="polite">
-      <div className="p-4">
-        <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#0f7b55]">
-          <RefreshCw aria-hidden="true" size={16} />
-          {replanResult.eventTitle}
+    <article
+      className="surface mt-4 rounded-[8px] border border-[#b9dcd0] bg-[#f2fbf7] p-4"
+      aria-live="polite"
+    >
+      <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#0f7b55]">
+        <Check aria-hidden="true" size={16} />
+        {replanResult.eventTitle}
+      </div>
+      <h2 className="keep-korean mt-2 text-[18px] font-extrabold leading-6">
+        {replanResult.title}
+      </h2>
+      <p className="muted-text mt-2 text-[13px] font-medium leading-5">
+        {replanResult.description}
+      </p>
+      <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-[8px] bg-white/70 px-3 py-3">
+        <div>
+          <p className="text-[10px] font-bold text-[#8b94a3]">이전</p>
+          <p className="mt-1 text-[12px] font-extrabold">취업지원 확인</p>
         </div>
-        <h2 className="mt-2 text-[18px] font-extrabold leading-6">{replanResult.title}</h2>
-        <p className="muted-text mt-2 text-[13px] font-medium leading-5">
-          {replanResult.description}
-        </p>
-        <div className="mt-3 space-y-2">
-          {replanResult.highlights.map((item) => (
-            <div key={item} className="flex items-start gap-2 text-[12px] font-bold">
-              <Check aria-hidden="true" size={15} className="mt-0.5 shrink-0 text-[#0f7b55]" />
-              <span>{item}</span>
-            </div>
-          ))}
+        <ArrowRight aria-hidden="true" size={16} className="text-[#0f7b55]" />
+        <div>
+          <p className="text-[10px] font-bold text-[#0f7b55]">새로운 다음 행동</p>
+          <p className="mt-1 text-[12px] font-extrabold">주거지원 확인</p>
         </div>
       </div>
-      <div className="border-t border-[#cfe8df] bg-white/60 px-4 py-3">
-        <p className="text-[11px] font-extrabold text-[#0f7b55]">새로운 다음 행동</p>
-        <p className="mt-1 text-[14px] font-extrabold leading-5">{replanResult.nextAction}</p>
+      <div className="mt-2 flex justify-end">
         <button
           type="button"
           onClick={onReset}
-          className="mt-2 flex min-h-9 items-center gap-1 text-[12px] font-extrabold text-[#6b7280]"
+          className="flex min-h-9 items-center gap-1 text-[12px] font-extrabold text-[#6b7280]"
         >
           <RotateCcw aria-hidden="true" size={15} />
-          초기 상태로 되돌리기
+          처음 상태로 되돌리기
         </button>
       </div>
     </article>
@@ -715,63 +617,58 @@ function AgentAssistant({
     const normalized = message.replace(/\s/g, "");
     if (!normalized) return;
 
-    if (normalized.includes("취업") && normalized.includes("확정")) {
+    if (normalized.includes("취업") && (normalized.includes("확정") || normalized.includes("출근"))) {
       if (missionPhase === "planning") onRunReplan();
-      setResponse("취업 확정을 반영해 미션 전체의 행동 시점을 다시 판단할게요.");
+      setResponse("취업 상태를 반영해 미션 전체를 다시 판단할게요.");
     } else if (normalized.includes("왜") || normalized.includes("이유")) {
-      setResponse("각 행동의 ‘왜 이렇게 판단했나요?’를 열면 현재 상태와 다시 확인할 시점을 볼 수 있어요.");
-    } else if (normalized.includes("새미션") || normalized.includes("목표")) {
-      setResponse("새 목표를 말할 수 있는 화면을 열어드릴게요.");
+      setResponse("각 항목을 열면 판단 이유를 짧게 볼 수 있어요.");
+    } else if (normalized.includes("목표")) {
       onChangeView("goal");
     } else if (normalized.includes("기록")) {
-      setResponse("AI가 한 일을 시간순으로 확인할 수 있어요.");
       onOpenLogs();
     } else if (normalized.includes("개인정보") || normalized.includes("마이데이터")) {
-      setResponse("연결된 정보와 사용 기간을 확인할 수 있어요.");
       onOpenSettings();
     } else {
-      setResponse("현재 미션에 반영할 수 있는 변화인지 확인했어요. 필요한 경우에만 추가 정보를 물어볼게요.");
+      setResponse("현재 미션에 반영할 변화인지 확인했어요. 다음 행동이 달라질 때만 추가 정보를 물어볼게요.");
     }
     setMessage("");
   }
 
   return (
-    <details className="app-card mt-4 rounded-[8px] px-4">
-      <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between">
+    <details className="app-card mt-3 rounded-[8px] px-4">
+      <summary className="flex min-h-[60px] cursor-pointer list-none items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-[8px] bg-[#eef4ff] text-[#2f6bff]">
             <MessageCircle aria-hidden="true" size={19} />
           </div>
           <div>
-            <p className="text-[15px] font-extrabold">AI에게 변화 알리기</p>
-            <p className="muted-text mt-0.5 text-[12px] font-medium">목표 수정 · 이유 질문 · 상황 변화</p>
+            <p className="text-[14px] font-extrabold">AI에게 변화 알리기</p>
+            <p className="muted-text mt-0.5 text-[11px] font-medium">
+              목표 수정 · 이유 질문 · 상황 변화
+            </p>
           </div>
         </div>
         <ChevronDown aria-hidden="true" size={18} className="text-[#6b7280]" />
       </summary>
       <div className="border-t hairline pb-4 pt-3">
         {response ? (
-          <div className="surface mb-3 rounded-[8px] bg-[#f3f6fb] px-3 py-3 text-[13px] font-semibold leading-5" aria-live="polite">
+          <div
+            className="surface mb-3 rounded-[8px] bg-[#f3f6fb] px-3 py-3 text-[13px] font-semibold leading-5"
+            aria-live="polite"
+          >
             {response}
           </div>
         ) : null}
-        <div className="mb-3 flex gap-2 overflow-x-auto pb-1">
-          {["취업이 확정됐어요", "왜 기다려야 해?", "새 목표가 생겼어"].map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setMessage(item)}
-              className="shrink-0 rounded-full bg-[#f3f6fb] px-3 py-2 text-[12px] font-bold text-[#4b5563]"
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-        <form onSubmit={submit} className="flex items-center gap-2 rounded-[8px] border hairline bg-[#f9fbfd] p-2">
+        <form
+          onSubmit={submit}
+          className="flex items-center gap-2 rounded-[8px] border hairline bg-[#f9fbfd] p-2 focus-within:border-[#2f6bff]"
+        >
           <input
+            name="agent-message"
+            autoComplete="off"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="변화나 질문을 입력하세요"
+            placeholder="변화나 질문을 입력하세요…"
             aria-label="AI에게 변화나 질문 입력"
             className="min-w-0 flex-1 bg-transparent px-2 text-[14px] font-medium text-[#1f2937] outline-none placeholder:text-[#9ca3af]"
           />
@@ -789,66 +686,18 @@ function AgentAssistant({
   );
 }
 
-const actionStateConfig: Record<
-  ActionState,
-  {
-    label: string;
-    title: string;
-    description: string;
-    icon: typeof CircleDot;
-    header: string;
-    pill: string;
-  }
-> = {
-  now: {
-    label: "NOW",
-    title: "지금 할 일",
-    description: "현재 행동할 가치가 있어요",
-    icon: CircleDot,
-    header: "bg-[#eaf1ff] text-[#1e4ed8]",
-    pill: "bg-[#eaf1ff] text-[#1e4ed8]",
-  },
-  watch: {
-    label: "WATCH",
-    title: "AI가 지켜보는 중",
-    description: "정책과 공고 변화를 확인해요",
-    icon: Eye,
-    header: "bg-[#edf8f5] text-[#0f7b68]",
-    pill: "bg-[#edf8f5] text-[#0f7b68]",
-  },
-  wait: {
-    label: "WAIT",
-    title: "조건을 기다리는 중",
-    description: "행동할 시점이 오면 다시 봐요",
-    icon: Hourglass,
-    header: "bg-[#fff7e9] text-[#9a5b00]",
-    pill: "bg-[#fff7e9] text-[#9a5b00]",
-  },
-  drop: {
-    label: "DROP",
-    title: "지금은 제외",
-    description: "현재 우선순위가 아니에요",
-    icon: Flag,
-    header: "bg-[#f3f4f6] text-[#6b7280]",
-    pill: "bg-[#f3f4f6] text-[#6b7280]",
-  },
-};
-
 function ActionStatePill({ state }: { state: ActionState }) {
-  const config = actionStateConfig[state];
+  const config = {
+    now: { label: "지금 확인", className: "bg-[#eaf1ff] text-[#1e4ed8]" },
+    watch: { label: "AI가 지켜봄", className: "bg-[#edf8f5] text-[#0f7b68]" },
+    wait: { label: "나중에 확인", className: "bg-[#fff7e9] text-[#9a5b00]" },
+    drop: { label: "우선순위 낮음", className: "bg-[#f3f4f6] text-[#6b7280]" },
+  }[state];
+
   return (
-    <span className={["shrink-0 rounded-full px-2.5 py-1 text-[11px] font-extrabold", config.pill].join(" ")}>
+    <span className={["shrink-0 rounded-full px-2.5 py-1 text-[11px] font-extrabold", config.className].join(" ")}>
       {config.label}
     </span>
-  );
-}
-
-function MissionMetric({ label, value }: { label: string; value: number }) {
-  return (
-    <div>
-      <p className="text-[19px] font-extrabold">{value}</p>
-      <p className="mt-0.5 text-[10px] font-bold text-white/70">{label}</p>
-    </div>
   );
 }
 
@@ -860,15 +709,11 @@ function BackButton({ onClick }: { onClick: () => void }) {
       className="flex min-h-10 items-center gap-1 text-[13px] font-extrabold text-[#6b7280]"
     >
       <ArrowLeft aria-hidden="true" size={18} />
-      처음 선택으로
+      목표 입력으로
     </button>
   );
 }
 
-function getActions(mission: Mission, state: ActionState) {
+function getActions(mission: typeof missionBefore, state: ActionState) {
   return mission.actions.filter((action) => action.state === state);
-}
-
-function countActions(mission: Mission, state: ActionState) {
-  return getActions(mission, state).length;
 }

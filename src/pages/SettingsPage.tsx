@@ -1,8 +1,10 @@
 import type { ReactNode } from "react";
 import {
+  BookOpen,
   ChevronRight,
   Database,
   Eye,
+  Flag,
   Mic,
   Moon,
   ShieldCheck,
@@ -18,6 +20,7 @@ type SettingsPageProps = {
   onToggleLargeText: () => void;
   onToggleHighContrast: () => void;
   onToggleSimpleMode: () => void;
+  onOpenGuide: () => void;
 };
 
 export function SettingsPage({
@@ -27,6 +30,7 @@ export function SettingsPage({
   onToggleLargeText,
   onToggleHighContrast,
   onToggleSimpleMode,
+  onOpenGuide,
 }: SettingsPageProps) {
   return (
     <section className="px-5 py-5">
@@ -76,7 +80,7 @@ export function SettingsPage({
           </div>
           <button
             type="button"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f3f6fb] text-[#6b7280]"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f3f6fb] text-[#6b7280]"
             aria-label="내 마이데이터 관리 열기"
           >
             <ChevronRight aria-hidden="true" size={19} />
@@ -145,6 +149,52 @@ export function SettingsPage({
           <Mic aria-hidden="true" size={21} />
         </div>
       </article>
+
+      <details className="app-card mt-3 rounded-[8px] px-4">
+        <summary className="flex min-h-[64px] cursor-pointer list-none items-center justify-between">
+          <span className="flex items-center gap-3">
+            <span className="flex h-10 w-10 items-center justify-center rounded-[10px] bg-[#eef4ff] text-[#2f6bff]">
+              <ShieldCheck aria-hidden="true" size={21} />
+            </span>
+            <span>
+              <span className="block text-[16px] font-extrabold">안전·신뢰센터</span>
+              <span className="muted-text mt-1 block text-[13px] font-medium">
+                AI와 개인정보 이용 원칙
+              </span>
+            </span>
+          </span>
+          <ChevronRight aria-hidden="true" size={19} className="text-[#6b7280]" />
+        </summary>
+        <div className="border-t hairline pb-4 pt-3">
+          {[
+            "AI는 다음 행동과 신청 준비를 돕습니다.",
+            "최종 자격과 처분은 해당 기관이 결정합니다.",
+            "사용자 승인 없이 신청을 제출하지 않습니다.",
+            "데모에서는 개인정보를 저장하거나 전송하지 않습니다.",
+          ].map((item) => (
+            <p key={item} className="muted-text flex items-start gap-2 py-1.5 text-[13px] font-medium leading-5">
+              <ShieldCheck aria-hidden="true" size={15} className="mt-0.5 shrink-0 text-[#2f6bff]" />
+              {item}
+            </p>
+          ))}
+          <button
+            type="button"
+            className="mt-3 flex min-h-11 w-full items-center justify-center gap-2 rounded-[8px] bg-[#f3f6fb] px-4 text-[13px] font-extrabold text-[#4b5563]"
+          >
+            <Flag aria-hidden="true" size={17} />
+            오류·보안 문제 신고 안내
+          </button>
+        </div>
+      </details>
+
+      <button
+        type="button"
+        onClick={onOpenGuide}
+        className="mt-3 flex min-h-12 w-full items-center justify-center gap-2 rounded-[8px] text-[13px] font-extrabold text-[#6b7280]"
+      >
+        <BookOpen aria-hidden="true" size={17} />
+        서비스 안내 다시 보기
+      </button>
 
       <p className="muted-text mt-4 text-center text-[11px] font-semibold leading-5">
         데모에서는 실제 정보를 저장하거나 외부로 전송하지 않습니다.

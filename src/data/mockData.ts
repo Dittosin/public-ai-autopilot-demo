@@ -43,15 +43,12 @@ export const publicConnectionItems: PublicConnectionItem[] = [
 
 export const missionBefore: Mission = {
   id: "career-independence",
-  title: "취업하고 독립하기",
-  userGoal: "졸업하고 서울에서 취업해서 독립하고 싶어.",
-  summary: "취업 준비와 독립 준비를 한 미션으로 연결해 관리합니다.",
-  updatedLabel: "방금 판단",
-  nextAction: "취업지원 자격을 먼저 확인하고, 주거지원은 조건이 갖춰질 때까지 지켜봅니다.",
+  title: "서울 취업하고 독립하기",
+  userGoal: "졸업하고 서울에서 취업해서 독립하고 싶어요.",
   actions: [
     {
       id: "career-eligibility",
-      title: "취업지원 자격 확인",
+      title: "취업·직업훈련 지원 확인",
       category: "취업",
       state: "now",
       description: "현재 미취업 상태에서 먼저 확인할 가치가 있습니다.",
@@ -123,9 +120,6 @@ export const missionBefore: Mission = {
 
 export const missionAfter: Mission = {
   ...missionBefore,
-  summary: "취업 확정에 맞춰 독립 준비의 우선순위를 높였습니다.",
-  updatedLabel: "취업 확정 후 다시 판단",
-  nextAction: "근무지역을 기준으로 지금 검토할 주거지원을 먼저 확인합니다.",
   actions: [
     {
       id: "work-area-housing",
@@ -134,7 +128,7 @@ export const missionAfter: Mission = {
       state: "now",
       description: "취업 확정으로 주거지원 검토 시점이 앞당겨졌습니다.",
       reason: "근무지역을 기준으로 통근권과 이사 후보를 좁힐 수 있어 지금 확인할 가치가 생겼습니다.",
-      changeNote: "WATCH에서 NOW로 이동",
+      changeNote: "지켜보던 항목이 지금 할 일로 변경",
       canPrepare: true,
       demoExample: true,
     },
@@ -186,23 +180,16 @@ export const missionAfter: Mission = {
       state: "drop",
       description: "취업 확정으로 현재 우선순위에서 내렸습니다.",
       reason: "현재 목표가 구직에서 독립 준비로 이동해 우선 행동 목록에서 제외했습니다.",
-      changeNote: "NOW에서 제외",
+      changeNote: "지금 할 일에서 우선순위 낮춤",
       demoExample: true,
     },
   ],
 };
 
 export const replanResult: ReplanResult = {
-  eventTitle: "3개월 후 · 취업 확정",
-  title: "상황이 바뀌어 미션을 다시 확인했어요",
-  description: "미취업에서 취업 확정으로 상태가 바뀌어 모든 행동의 시점을 다시 판단했습니다.",
-  highlights: [
-    "취업준비 단계 지원의 우선순위를 낮춤",
-    "주거 관련 지원의 우선순위를 높임",
-    "근무지역 기준으로 주거지원 다시 검토",
-    "지켜보던 주거 항목 1건을 NOW로 이동",
-  ],
-  nextAction: "독립 준비를 위해 현재 확인할 가치가 있는 주거지원을 먼저 검토합니다.",
+  eventTitle: "취업 확정 · 강남 · 12월 출근",
+  title: "취업 상태를 반영해 미션을 다시 판단했어요",
+  description: "취업 준비보다 근무지역을 기준으로 한 독립 준비가 먼저 필요한 상태입니다.",
 };
 
 export const directionOptions: DirectionOption[] = [
@@ -331,13 +318,13 @@ export const auditLogs: AuditLog[] = [
   },
   {
     time: "09:03",
-    title: "‘취업하고 독립하기’ 미션 생성",
+    title: "‘서울 취업하고 독립하기’ 미션 생성",
     detail: "사용자 목표와 확인된 현재 상태를 연결했습니다.",
   },
   {
     time: "09:05",
     title: "다음 행동 분류",
-    detail: "취업·훈련·주거·이사 항목을 NOW, WATCH, WAIT로 나눴습니다.",
+    detail: "취업·훈련·주거·이사 항목을 지금 할 일, 지켜볼 일, 나중에 확인할 일로 나눴습니다.",
   },
   {
     time: "09:08",

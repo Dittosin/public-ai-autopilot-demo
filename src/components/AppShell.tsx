@@ -32,6 +32,9 @@ export function AppShell({
         highContrast ? "high-contrast" : "",
       ].join(" ")}
     >
+      <a href="#main-content" className="skip-link">
+        본문으로 건너뛰기
+      </a>
       <div className="app-bg app-shell-shadow mx-auto flex min-h-screen w-full max-w-[430px] flex-col">
         {showChrome ? (
           <header className="surface sticky top-0 z-20 border-b hairline bg-[#f6f8fb]/95 px-5 pb-3 pt-4 backdrop-blur">
@@ -67,7 +70,7 @@ export function AppShell({
           </header>
         ) : null}
 
-        <main className={showChrome ? "flex-1 pb-24" : "flex-1"}>
+        <main id="main-content" className={showChrome ? "flex-1 pb-24" : "flex-1"}>
           {children}
         </main>
 

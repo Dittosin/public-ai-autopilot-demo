@@ -11,21 +11,28 @@ import { SettingsPage } from "./pages/SettingsPage";
 import type { HomeView, MissionPhase, Screen } from "./types";
 
 function App() {
-  const [screen, setScreen] = useState<Screen>("onboarding");
+  const [screen, setScreen] = useState<Screen>("home");
   const [largeText, setLargeText] = useState(false);
   const [highContrast, setHighContrast] = useState(false);
   const [simpleMode, setSimpleMode] = useState(false);
-  const [homeView, setHomeView] = useState<HomeView>("entry");
+  const [homeView, setHomeView] = useState<HomeView>("goal");
   const [missionPhase, setMissionPhase] = useState<MissionPhase>("planning");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
-  }, [screen, homeView]);
+  }, [screen, homeView, missionPhase]);
 
   const page = (() => {
     switch (screen) {
       case "onboarding":
-        return <OnboardingPage onStart={() => setScreen("home")} />;
+        return (
+          <OnboardingPage
+            onStart={() => {
+              setHomeView("goal");
+              setScreen("home");
+            }}
+          />
+        );
       case "home":
         return (
           <HomePage
@@ -89,6 +96,7 @@ function App() {
             onToggleLargeText={() => setLargeText((value) => !value)}
             onToggleHighContrast={() => setHighContrast((value) => !value)}
             onToggleSimpleMode={() => setSimpleMode((value) => !value)}
+            onOpenGuide={() => setScreen("onboarding")}
           />
         );
       default:

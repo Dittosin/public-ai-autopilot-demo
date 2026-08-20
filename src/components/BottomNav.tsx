@@ -16,7 +16,7 @@ type BottomNavProps = {
 export function BottomNav({ currentScreen, onNavigate }: BottomNavProps) {
   return (
     <nav
-      className="tab-bar fixed bottom-0 left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 border-t hairline bg-white px-3 pb-3 pt-2"
+      className="tab-bar fixed bottom-0 left-1/2 z-30 w-full max-w-[430px] -translate-x-1/2 border-t hairline bg-white px-3 pb-[max(12px,env(safe-area-inset-bottom))] pt-2"
       aria-label="하단 메뉴"
     >
       <div className="grid grid-cols-4 gap-1">

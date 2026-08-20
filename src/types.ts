@@ -11,7 +11,6 @@ export type Screen =
   | "settings";
 
 export type HomeView =
-  | "entry"
   | "goal"
   | "mission"
   | "direction"
@@ -49,9 +48,6 @@ export type Mission = {
   id: string;
   title: string;
   userGoal: string;
-  summary: string;
-  updatedLabel: string;
-  nextAction: string;
   actions: MissionAction[];
 };
 
@@ -59,8 +55,6 @@ export type ReplanResult = {
   eventTitle: string;
   title: string;
   description: string;
-  highlights: string[];
-  nextAction: string;
 };
 
 export type PublicConnectionItem = {

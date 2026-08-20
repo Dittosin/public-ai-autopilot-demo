@@ -22,6 +22,7 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
   overscroll-behavior-y: none;
+  overflow-x: hidden;
 }
 
 button,
@@ -33,6 +34,24 @@ textarea {
 
 button {
   -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 50%;
+  z-index: 100;
+  transform: translate(-50%, -150%);
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px 16px;
+  color: #1e4ed8;
+  font-weight: 800;
+}
+
+.skip-link:focus {
+  transform: translate(-50%, 0);
 }
 
 .keep-korean {
@@ -46,6 +65,12 @@ input:focus-visible,
 textarea:focus-visible {
   outline: 3px solid #2f6bff;
   outline-offset: 3px;
+}
+
+summary:focus-visible {
+  outline: 3px solid #2f6bff;
+  outline-offset: 3px;
+  border-radius: 8px;
 }
 
 .large-text {
@@ -123,4 +148,15 @@ textarea:focus-visible {
 .high-contrast input::placeholder,
 .high-contrast textarea::placeholder {
   color: #d1d5db;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
