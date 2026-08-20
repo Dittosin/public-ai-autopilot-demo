@@ -92,6 +92,7 @@ function GoalComposer({
   onBrowseSupport: () => void;
 }) {
   const [goal, setGoal] = useState(missionBefore.userGoal);
+  const [goalError, setGoalError] = useState("");
 
   return (
     <section className="px-5 py-6">
@@ -111,25 +112,45 @@ function GoalComposer({
         className="app-card mt-6 rounded-[8px] p-4"
         onSubmit={(event) => {
           event.preventDefault();
-          if (goal.trim()) onCreateMission();
+          const normalizedGoal = goal.replace(/\s/g, "");
+          if (!normalizedGoal) return;
+          if (!normalizedGoal.includes("취업") || !normalizedGoal.includes("독립")) {
+            setGoalError("현재 데모는 ‘취업하고 독립하기’ 대표 시나리오를 지원합니다.");
+            return;
+          }
+          setGoalError("");
+          onCreateMission();
         }}
       >
-        <label htmlFor="mission-goal" className="text-[13px] font-extrabold text-[#2f6bff]">
-          이루고 싶은 목표
-        </label>
+        <div className="flex items-center justify-between gap-3">
+          <label htmlFor="mission-goal" className="text-[13px] font-extrabold text-[#2f6bff]">
+            이루고 싶은 목표
+          </label>
+          <span className="rounded-full bg-[#f3f6fb] px-2.5 py-1 text-[11px] font-extrabold text-[#6b7280]">
+            대표 시나리오
+          </span>
+        </div>
         <textarea
           id="mission-goal"
           name="mission-goal"
           autoComplete="off"
           value={goal}
-          onChange={(event) => setGoal(event.target.value)}
+          onChange={(event) => {
+            setGoal(event.target.value);
+            if (goalError) setGoalError("");
+          }}
           rows={3}
           className="mt-3 w-full resize-none rounded-[8px] border border-[#dfe6ef] bg-[#f9fbfd] p-4 text-[18px] font-bold leading-7 text-[#1f2937] outline-none"
         />
         <div className="mt-3 flex items-center gap-2 text-[12px] font-bold text-[#6b7280]">
           <Mic aria-hidden="true" size={17} className="text-[#2f6bff]" />
-          음성 입력도 사용할 수 있어요
+          음성 입력은 실제 녹음 없이 UI만 보여줍니다
         </div>
+        {goalError ? (
+          <p className="mt-3 rounded-[8px] bg-[#fff7ed] px-3 py-2 text-[12px] font-bold leading-5 text-[#9a4f0a]" role="alert">
+            {goalError}
+          </p>
+        ) : null}
         <Button
           type="submit"
           className="mt-5 w-full"
@@ -145,9 +166,9 @@ function GoalComposer({
           <UserRoundSearch aria-hidden="true" size={18} />
         </div>
         <div className="min-w-0">
-          <p className="text-[12px] font-extrabold">확인된 현재 상태</p>
+          <p className="text-[12px] font-extrabold">가상 사용자 상태 · 데모</p>
           <p className="muted-text mt-0.5 text-[12px] font-medium leading-5">
-            24세 · 졸업예정 · 미취업 · 부모와 거주
+            24세 · 졸업예정 · 구직 중 · 부모와 거주
           </p>
         </div>
       </div>
@@ -360,7 +381,7 @@ function MissionBoard({
       <div>
         <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
           <Target aria-hidden="true" size={16} />
-          내 미션 · 계속 관리 중
+          내 미션 · 데모 시나리오
         </div>
         <h1 className="keep-korean mt-2 text-[28px] font-extrabold leading-[1.2]">
           {mission.title}
@@ -368,7 +389,7 @@ function MissionBoard({
         <p className="muted-text mt-2 text-[13px] font-semibold leading-5">
           {missionPhase === "employmentConfirmed"
             ? "24세 · 졸업예정 · 취업 확정 · 강남 · 12월 출근"
-            : "24세 · 졸업예정 · 미취업 · 부모와 거주"}
+            : "24세 · 졸업예정 · 구직 중 · 부모와 거주"}
         </p>
       </div>
 
@@ -381,7 +402,7 @@ function MissionBoard({
       <div className="mt-3 space-y-2">
         <SupportingAction
           icon={<Eye aria-hidden="true" size={18} />}
-          label="AI가 지켜보는 중"
+          label="AI가 새 공고 확인 중"
           action={watchAction}
           tone="mint"
         />
@@ -468,7 +489,7 @@ function PrimaryActionCard({ action, onOpen }: { action: MissionAction; onOpen: 
           className="mt-3 w-full"
           icon={<ArrowRight aria-hidden="true" size={18} />}
         >
-          확인하기
+          지원 분류 확인
         </Button>
       </div>
     </article>
@@ -513,7 +534,7 @@ function SupportingAction({
 function CompactAction({ action, last }: { action: MissionAction; last: boolean }) {
   const stateLabel = {
     now: "지금 할 일",
-    watch: "지켜보는 중",
+    watch: "공고 확인 중",
     wait: "나중에 확인",
     drop: "우선순위 낮음",
   }[action.state];
@@ -536,7 +557,7 @@ function CompactAction({ action, last }: { action: MissionAction; last: boolean 
 function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void }) {
   return (
     <article className="mt-3 rounded-[8px] bg-[#18233a] p-4 text-white" aria-live="polite">
-      <p className="text-[11px] font-extrabold text-white/60">핵심 기능 체험</p>
+      <p className="text-[11px] font-extrabold text-white/60">데모 상황 적용</p>
       <p className="mt-1 text-[15px] font-extrabold">
         상황이 바뀌면 다음 할 일도 바뀝니다
       </p>
@@ -549,7 +570,7 @@ function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void
         <RefreshCw aria-hidden="true" size={17} className={loading ? "animate-spin" : ""} />
         {loading
           ? "취업 상태를 반영해 미션을 다시 확인하고 있어요…"
-          : "취업했어. 강남에서 12월부터 출근해."}
+          : "‘취업 확정 · 강남 · 12월 출근’ 적용"}
       </button>
     </article>
   );
@@ -629,7 +650,7 @@ function AgentAssistant({
     } else if (normalized.includes("개인정보") || normalized.includes("마이데이터")) {
       onOpenSettings();
     } else {
-      setResponse("현재 미션에 반영할 변화인지 확인했어요. 다음 행동이 달라질 때만 추가 정보를 물어볼게요.");
+      setResponse("이 데모에서는 ‘취업 확정’, ‘판단 이유’, ‘기록’, ‘개인정보’ 요청을 체험할 수 있어요.");
     }
     setMessage("");
   }
@@ -642,7 +663,7 @@ function AgentAssistant({
             <MessageCircle aria-hidden="true" size={19} />
           </div>
           <div>
-            <p className="text-[14px] font-extrabold">AI에게 변화 알리기</p>
+            <p className="text-[14px] font-extrabold">AI 데모에 변화 알리기</p>
             <p className="muted-text mt-0.5 text-[11px] font-medium">
               목표 수정 · 이유 질문 · 상황 변화
             </p>
@@ -668,7 +689,7 @@ function AgentAssistant({
             autoComplete="off"
             value={message}
             onChange={(event) => setMessage(event.target.value)}
-            placeholder="변화나 질문을 입력하세요…"
+            placeholder="예: 취업이 확정됐어…"
             aria-label="AI에게 변화나 질문 입력"
             className="min-w-0 flex-1 bg-transparent px-2 text-[14px] font-medium text-[#1f2937] outline-none placeholder:text-[#9ca3af]"
           />
@@ -689,7 +710,7 @@ function AgentAssistant({
 function ActionStatePill({ state }: { state: ActionState }) {
   const config = {
     now: { label: "지금 확인", className: "bg-[#eaf1ff] text-[#1e4ed8]" },
-    watch: { label: "AI가 지켜봄", className: "bg-[#edf8f5] text-[#0f7b68]" },
+    watch: { label: "공고 확인 중", className: "bg-[#edf8f5] text-[#0f7b68]" },
     wait: { label: "나중에 확인", className: "bg-[#fff7e9] text-[#9a5b00]" },
     drop: { label: "우선순위 낮음", className: "bg-[#f3f4f6] text-[#6b7280]" },
   }[state];

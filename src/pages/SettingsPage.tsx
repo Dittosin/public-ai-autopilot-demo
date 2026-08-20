@@ -40,7 +40,7 @@ export function SettingsPage({
       <ScreenHeader
         eyebrow="설정"
         title="내 앱을 편하게"
-        description="글씨, 화면, 개인정보 사용 범위를 여기서 관리합니다."
+        description="글씨, 화면, 연결 정보 범위를 여기서 관리합니다."
       />
 
       <article className="app-card mt-5 rounded-[8px] px-4">
@@ -75,19 +75,17 @@ export function SettingsPage({
               <Database aria-hidden="true" size={22} />
             </div>
             <div>
-              <p className="text-[17px] font-extrabold">내 마이데이터 관리</p>
+              <div className="flex flex-wrap items-center gap-2">
+                <p className="text-[17px] font-extrabold">연결한 정보 관리</p>
+                <span className="rounded-full bg-[#f3f6fb] px-2 py-1 text-[10px] font-extrabold text-[#6b7280]">
+                  시나리오 데이터
+                </span>
+              </div>
               <p className="muted-text mt-1 text-[13px] font-medium leading-5">
-                목적별로 연결하도록 동의한 정보와 사용 기간을 관리합니다.
+                공공 마이데이터 연결 범위와 사용 기간을 데모로 보여줍니다.
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f3f6fb] text-[#6b7280]"
-            aria-label="내 마이데이터 관리 열기"
-          >
-            <ChevronRight aria-hidden="true" size={19} />
-          </button>
         </div>
 
         <div className="mt-4 space-y-2">
@@ -108,7 +106,7 @@ export function SettingsPage({
                       : "bg-[#fff5e6] text-[#a15c00]",
                   ].join(" ")}
                 >
-                  {item.status}
+                  {item.status === "연결됨" ? "데모 연결" : item.status}
                 </span>
               </div>
               <p className="muted-text mt-1 text-[12px] font-medium leading-5">
@@ -122,7 +120,7 @@ export function SettingsPage({
                   </span>
                 </div>
                 <div className="rounded-[8px] bg-white px-3 py-2 text-[#6b7280]">
-                  최근 사용
+                  데모 사용
                   <span className="mt-0.5 block text-[#1f2937]">
                     {item.lastUsed}
                   </span>
@@ -138,7 +136,7 @@ export function SettingsPage({
           className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-[8px] bg-[#f3f6fb] px-4 text-[14px] font-extrabold text-[#1f2937]"
         >
           <ShieldCheck aria-hidden="true" size={18} />
-          개인정보 사용 내역 보기
+          활동·승인 기록 보기
         </button>
       </article>
 
@@ -146,11 +144,16 @@ export function SettingsPage({
         <div>
           <p className="text-[16px] font-extrabold">음성 입력</p>
           <p className="muted-text mt-1 text-[13px] font-medium">
-            말로 AI에게 요청합니다.
+            실제 녹음 없이 음성 버튼 UI만 제공합니다.
           </p>
         </div>
-        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#eef4ff] text-[#2f6bff]">
-          <Mic aria-hidden="true" size={21} />
+        <div className="flex items-center gap-2">
+          <span className="rounded-full bg-[#f3f6fb] px-2 py-1 text-[10px] font-extrabold text-[#6b7280]">
+            데모
+          </span>
+          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#eef4ff] text-[#2f6bff]">
+            <Mic aria-hidden="true" size={21} />
+          </div>
         </div>
       </article>
 

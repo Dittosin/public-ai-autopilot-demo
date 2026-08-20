@@ -18,7 +18,7 @@ export const userProfile: UserProfile = {
     { label: "연령", value: "만 24세" },
     { label: "학업", value: "대학 졸업예정" },
     { label: "거주", value: "수도권 거주" },
-    { label: "취업", value: "현재 미취업" },
+    { label: "취업", value: "현재 구직 중" },
     { label: "가구", value: "부모와 거주" },
   ],
 };
@@ -51,8 +51,8 @@ export const missionBefore: Mission = {
       title: "취업·직업훈련 지원 확인",
       category: "취업",
       state: "now",
-      description: "현재 미취업 상태에서 먼저 확인할 가치가 있습니다.",
-      reason: "졸업예정이고 현재 미취업으로 확인되어 취업지원 범위를 우선 검토합니다.",
+      description: "현재 구직 중인 데모 상태에서 먼저 확인할 가치가 있습니다.",
+      reason: "졸업예정이고 현재 구직 중인 시나리오이므로 취업지원 범위를 우선 검토합니다.",
       canPrepare: true,
       demoExample: true,
     },
@@ -71,7 +71,7 @@ export const missionBefore: Mission = {
       title: "청년안심주택 신규공고",
       category: "주거",
       state: "watch",
-      description: "AI가 새 공고가 나오는지 지켜봅니다.",
+      description: "새 공고 등록 여부를 확인하도록 설정했습니다.",
       reason: "아직 근무지와 이사 시점이 정해지지 않아 특정 공고를 지금 신청하지 않고 모니터링합니다.",
       nextCheck: "근무지역 확정 또는 신규공고 등록 시",
       demoExample: true,
@@ -128,7 +128,7 @@ export const missionAfter: Mission = {
       state: "now",
       description: "취업 확정으로 주거지원 검토 시점이 앞당겨졌습니다.",
       reason: "근무지역을 기준으로 통근권과 이사 후보를 좁힐 수 있어 지금 확인할 가치가 생겼습니다.",
-      changeNote: "지켜보던 항목이 지금 할 일로 변경",
+      changeNote: "확인 중이던 항목이 지금 할 일로 변경",
       canPrepare: true,
       demoExample: true,
     },
@@ -148,7 +148,7 @@ export const missionAfter: Mission = {
       title: "근무지 인근 청년안심주택 공고",
       category: "주거",
       state: "watch",
-      description: "근무지 통근권 안의 신규공고를 지켜봅니다.",
+      description: "근무지 통근권 안의 신규공고 등록 여부를 확인합니다.",
       reason: "취업은 확정됐지만 실제 입주 가능 시점이 정해지지 않아 공고 변화를 모니터링합니다.",
       nextCheck: "신규공고 또는 입주 희망월 입력 시",
       demoExample: true,
@@ -246,6 +246,37 @@ export const rightsPackages: RightsPackage[] = [
   },
 ];
 
+export const housingRightsPackage: RightsPackage = {
+  id: "housing-after-employment",
+  title: "취업 확정 후 주거지원 패키지",
+  subtitle: "근무지역을 기준으로 주거·이사 지원의 확인 시점을 다시 정리했습니다.",
+  alert: "새로운 다음 행동",
+  progress: 42,
+  tone: "mint",
+  items: [
+    {
+      name: "근무지 기준 주거지원",
+      description: "입주 희망 시점을 확인하면 가능성을 더 좁힐 수 있습니다. (데모 예시)",
+      status: "추가 확인 필요",
+    },
+    {
+      name: "근무지 인근 청년주택 공고",
+      description: "근무지 통근권의 신규 모집공고를 확인합니다. (데모 예시)",
+      status: "추후 알림 필요",
+    },
+    {
+      name: "청년월세지원",
+      description: "임대차계약 이후 다시 확인합니다. (데모 예시)",
+      status: "추후 알림 필요",
+    },
+    {
+      name: "이사비 지원",
+      description: "실제 이사·전입 이후 확인할 항목입니다. (데모 예시)",
+      status: "현재 해당 없음",
+    },
+  ],
+};
+
 export const consentItems: ConsentItem[] = [
   {
     dataName: "기본 신원·연령 정보",
@@ -267,6 +298,33 @@ export const consentItems: ConsentItem[] = [
     dataName: "취업·고용 상태",
     reason: "현재 행동할 취업지원과 추가 확인 항목을 구분하는 데 필요합니다.",
     purpose: "취업지원 신청 가능성 사전 확인",
+    agency: "고용 관련 기관",
+    period: "신청 준비 완료까지",
+    revocable: true,
+  },
+];
+
+export const housingConsentItems: ConsentItem[] = [
+  {
+    dataName: "기본 신원·연령 정보",
+    reason: "청년 주거지원의 연령 기준을 사전 확인하는 데 필요합니다.",
+    purpose: "연령 기준과 본인 정보 확인",
+    agency: "기본 행정정보 관련 기관",
+    period: "신청 준비 완료까지",
+    revocable: true,
+  },
+  {
+    dataName: "주민등록상 거주지",
+    reason: "현재 거주 상태와 이사 전후 조건을 구분하는 데 필요합니다.",
+    purpose: "거주지·전입 조건 확인",
+    agency: "주민등록 관련 기관",
+    period: "7일",
+    revocable: true,
+  },
+  {
+    dataName: "취업 예정·근무지역",
+    reason: "근무지역을 기준으로 주거지원 확인 범위를 좁히는 데 필요합니다.",
+    purpose: "근무지역 기준 주거지원 사전검토",
     agency: "고용 관련 기관",
     period: "신청 준비 완료까지",
     revocable: true,
@@ -300,6 +358,32 @@ export const documentStates: DocumentState[] = [
   },
 ];
 
+export const housingApplicationDraft = {
+  title: "주거지원 사전검토 초안",
+  applicant: "김민지",
+  target: "취업 확정 · 강남 근무 예정",
+  summary:
+    "현재 거주지와 근무지역을 바탕으로 데모용 주거지원 사전검토 초안을 준비했습니다. 임대차계약 정보는 계약 이후 확인합니다.",
+};
+
+export const housingDocumentStates: DocumentState[] = [
+  {
+    name: "주민등록 정보",
+    status: "동의한 공공정보로 대체 가능한 항목입니다.",
+    level: "ready",
+  },
+  {
+    name: "취업 예정·근무지역",
+    status: "데모 시나리오에서 확인 완료로 표시했습니다.",
+    level: "ready",
+  },
+  {
+    name: "임대차계약 정보",
+    status: "계약 이후 사용자가 직접 확인할 항목입니다.",
+    level: "warning",
+  },
+];
+
 export const finalReview = {
   checkedInfo: ["만 24세", "수도권 거주", "현재 미취업"],
   documents: ["신청서 초안", "주민등록 정보", "취업 상태 확인 자료"],
@@ -308,6 +392,12 @@ export const finalReview = {
     "공식 자격 판정과 처분은 소관기관 시스템이 수행합니다.",
     "AI는 신청 준비를 도와주며, 사용자 승인 없이 제출하지 않습니다.",
   ],
+};
+
+export const housingFinalReview = {
+  checkedInfo: ["만 24세", "수도권 거주", "강남 근무 예정"],
+  documents: ["사전검토 초안", "주민등록 정보", "취업 예정 확인 자료"],
+  targets: ["근무지 기준 주거지원 (데모 예시)"],
 };
 
 export const auditLogs: AuditLog[] = [
@@ -324,7 +414,7 @@ export const auditLogs: AuditLog[] = [
   {
     time: "09:05",
     title: "다음 행동 분류",
-    detail: "취업·훈련·주거·이사 항목을 지금 할 일, 지켜볼 일, 나중에 확인할 일로 나눴습니다.",
+    detail: "취업·훈련·주거·이사 항목을 지금 할 일, 공고 확인, 나중에 확인할 일로 나눴습니다.",
   },
   {
     time: "09:08",
@@ -350,6 +440,12 @@ export const replanAuditLogs: AuditLog[] = [
     detail: "취업 준비의 우선순위를 낮추고 주거·독립 준비의 우선순위를 높였습니다.",
   },
 ];
+
+export const submittedAuditLog: AuditLog = {
+  time: "09:12",
+  title: "데모 제출 흐름 완료",
+  detail: "사용자가 최종 확인을 체험했습니다. 실제 본인인증이나 기관 제출은 진행하지 않았습니다.",
+};
 
 export const myDataItems: MyDataItem[] = [
   {

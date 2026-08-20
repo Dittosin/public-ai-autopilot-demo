@@ -27,7 +27,7 @@ type TrustCenterPageProps = {
 const canDo = [
   "정책 탐색",
   "자격 사전검토",
-  "정책·공고 변화 감시",
+  "정책·공고 변화 확인",
   "우선순위와 다음 행동 제안",
   "사용자가 확인할 신청 내용 준비",
 ];
@@ -49,8 +49,8 @@ const policyItems = [
 const riskLevels = [
   ["정보 탐색", "출처와 기준 표시"],
   ["개인화 판단", "이유 설명과 다시 확인"],
-  ["검증정보 접근", "목적별 동의와 철회"],
-  ["공식 중요행위", "내용 확인과 최종 승인"],
+  ["동의한 정보 확인", "목적별 동의와 철회"],
+  ["공식 신청·제출", "내용 확인과 최종 승인"],
 ];
 
 export function TrustCenterPage({ onBack, onOpenLogs }: TrustCenterPageProps) {
@@ -102,6 +102,9 @@ export function TrustCenterPage({ onBack, onOpenLogs }: TrustCenterPageProps) {
         </div>
         <p className="mt-3 rounded-[8px] bg-[#f8fafc] px-3 py-3 text-[12px] font-semibold leading-5 text-[#4b5563]">
           정보가 부족하거나 서로 다르면 결론을 단정하지 않고, 공식기관 또는 사람에게 확인하도록 안내합니다.
+        </p>
+        <p className="mt-2 text-[12px] font-semibold leading-5 text-[#6b7280]">
+          정책과 공고의 변화를 확인하는 기능이며, 사용자의 위치나 행동을 실시간으로 추적하지 않습니다.
         </p>
       </TrustSection>
 
@@ -205,20 +208,23 @@ export function TrustCenterPage({ onBack, onOpenLogs }: TrustCenterPageProps) {
       >
         <div className="divide-y hairline">
           {policyItems.map(([title, description]) => (
-            <button
+            <div
               key={title}
-              type="button"
-              onClick={() => showPrototypeNotice(`${title}은 실제 서비스 운영 전에 별도 문서로 고지합니다.`)}
-              className="flex min-h-[58px] w-full items-center justify-between gap-3 py-3 text-left hover:bg-[#f8fafc]"
+              className="flex min-h-[58px] w-full items-center justify-between gap-3 py-3"
             >
               <span className="min-w-0">
                 <span className="block text-[13px] font-extrabold text-[#374151]">{title}</span>
                 <span className="muted-text mt-1 block text-[11px] font-semibold leading-4">{description}</span>
               </span>
-              <ChevronDown aria-hidden="true" size={16} className="shrink-0 -rotate-90 text-[#9ca3af]" />
-            </button>
+              <span className="shrink-0 rounded-full bg-[#f3f6fb] px-2 py-1 text-[10px] font-extrabold text-[#6b7280]">
+                요약
+              </span>
+            </div>
           ))}
         </div>
+        <p className="mt-3 text-[11px] font-semibold leading-5 text-[#6b7280]">
+          실제 서비스 운영 전 각 항목을 별도 문서로 고지합니다.
+        </p>
       </TrustSection>
 
       <TrustSection
@@ -227,7 +233,7 @@ export function TrustCenterPage({ onBack, onOpenLogs }: TrustCenterPageProps) {
         summary="공개 전 비공개 신고와 공동 대응"
       >
         <p className="text-[13px] font-semibold leading-5 text-[#4b5563]">
-          취약점은 공개하기 전에 운영자에게 비공개로 알리고, 확인·조치 일정을 함께 조율하는 VDP·CVD 원칙을 따릅니다.
+          책임 있는 보안 취약점 공개(VDP·CVD) 원칙에 따라, 공개 전에 운영자에게 비공개로 알리고 확인·조치 일정을 함께 조율합니다.
         </p>
         <div className="mt-3 flex items-start gap-2 rounded-[8px] bg-[#fff7ed] p-3 text-[#9a4f0a]">
           <LockKeyhole aria-hidden="true" size={17} className="mt-0.5 shrink-0" />
@@ -257,7 +263,7 @@ export function TrustCenterPage({ onBack, onOpenLogs }: TrustCenterPageProps) {
 
       {notice ? (
         <div
-          className="mt-4 flex items-start gap-2 rounded-[8px] border hairline bg-white p-3"
+          className="fixed bottom-[calc(92px+env(safe-area-inset-bottom))] left-1/2 z-40 flex w-[calc(100%-32px)] max-w-[398px] -translate-x-1/2 items-start gap-2 rounded-[8px] border border-[#cfe0ff] bg-white p-3 shadow-lg"
           role="status"
           aria-live="polite"
         >

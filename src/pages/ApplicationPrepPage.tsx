@@ -2,18 +2,30 @@ import { AlertCircle, ArrowRight, CheckCircle2, FileText, ShieldAlert } from "lu
 import { Button } from "../components/Button";
 import { ProgressSteps } from "../components/ProgressSteps";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { applicationDraft, documentStates } from "../data/mockData";
+import {
+  applicationDraft,
+  documentStates,
+  housingApplicationDraft,
+  housingDocumentStates,
+} from "../data/mockData";
+import type { MissionPhase } from "../types";
 
 type ApplicationPrepPageProps = {
   simpleMode: boolean;
+  missionPhase: MissionPhase;
   onReview: () => void;
 };
 
 export function ApplicationPrepPage({
   simpleMode,
+  missionPhase,
   onReview,
 }: ApplicationPrepPageProps) {
-  const readyCount = documentStates.filter((doc) => doc.level === "ready").length;
+  const visibleDraft =
+    missionPhase === "employmentConfirmed" ? housingApplicationDraft : applicationDraft;
+  const visibleDocumentStates =
+    missionPhase === "employmentConfirmed" ? housingDocumentStates : documentStates;
+  const readyCount = visibleDocumentStates.filter((doc) => doc.level === "ready").length;
 
   return (
     <section className="px-5 py-5">
@@ -26,7 +38,7 @@ export function ApplicationPrepPage({
           description={
             simpleMode
               ? "부족한 서류만 확인하면 됩니다."
-              : applicationDraft.summary
+              : visibleDraft.summary
           }
         />
       </div>
@@ -38,10 +50,10 @@ export function ApplicationPrepPage({
           </div>
           <div>
             <p className="text-[17px] font-extrabold">
-              {applicationDraft.title}
+              {visibleDraft.title}
             </p>
             <p className="muted-text mt-1 text-[13px] font-medium">
-              {applicationDraft.applicant} · {applicationDraft.target}
+              {visibleDraft.applicant} · {visibleDraft.target}
             </p>
           </div>
         </div>
@@ -51,10 +63,10 @@ export function ApplicationPrepPage({
         <div className="flex items-center justify-between border-b hairline py-4">
           <p className="text-[16px] font-extrabold">첨부서류 상태</p>
           <span className="text-[13px] font-bold text-[#2f6bff]">
-            {readyCount}/{documentStates.length} 완료
+            {readyCount}/{visibleDocumentStates.length} 완료
           </span>
         </div>
-        {documentStates.map((doc, index) => {
+        {visibleDocumentStates.map((doc, index) => {
           const ready = doc.level === "ready";
           const Icon = ready ? CheckCircle2 : AlertCircle;
 
@@ -63,7 +75,7 @@ export function ApplicationPrepPage({
               key={doc.name}
               className={[
                 "flex items-center justify-between gap-3 py-4",
-                index < documentStates.length - 1 ? "border-b hairline" : "",
+                index < visibleDocumentStates.length - 1 ? "border-b hairline" : "",
               ].join(" ")}
             >
               <div>

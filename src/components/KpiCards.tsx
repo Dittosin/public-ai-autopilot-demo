@@ -11,10 +11,10 @@ export function KpiCards() {
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="text-[13px] font-extrabold text-[#2f6bff]">
-            효율 측정
+            데모 목표값
           </p>
           <h2 className="mt-1 text-[17px] font-extrabold">
-            신청 준비 부담을 줄입니다
+            기대하는 준비 과정의 변화
           </h2>
         </div>
       </div>
@@ -29,7 +29,7 @@ export function KpiCards() {
         ))}
       </div>
       <p className="muted-text mt-3 text-[11px] font-semibold leading-5">
-        데모 기준 예상값이며, 실증 단계에서 기준선 측정 후 확정합니다.
+        시나리오 가정에 따른 예상값이며, 실증 단계의 기준선 측정 후 확정합니다.
       </p>
     </article>
   );

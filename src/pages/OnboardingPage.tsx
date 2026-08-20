@@ -32,7 +32,7 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
             <Bot aria-hidden="true" size={21} />
           </div>
           <div>
-            <p className="text-[11px] font-bold text-[#6b7280]">공공 AI 데모</p>
+            <p className="text-[11px] font-bold text-[#6b7280]">정책공모전 데모</p>
             <p className="text-[17px] font-extrabold">내 삶의 오토파일럿</p>
           </div>
         </div>
@@ -255,7 +255,7 @@ function ProfileStep({
       <article className="app-card mt-6 rounded-[8px] p-5">
         <div className="flex items-center justify-between gap-3">
           <div>
-            <p className="text-[18px] font-extrabold">{userProfile.name}님의 현재 상태</p>
+            <p className="text-[18px] font-extrabold">가상 사용자 {userProfile.name}의 현재 상태</p>
             <p className="muted-text mt-1 text-[13px] font-medium">{userProfile.summary}</p>
           </div>
           <span className="rounded-full bg-[#eaf7f1] px-2.5 py-1 text-[11px] font-extrabold text-[#0f7b55]">

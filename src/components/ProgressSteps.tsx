@@ -14,7 +14,7 @@ export function ProgressSteps({ current }: ProgressStepsProps) {
           const done = step < current;
 
           return (
-            <div key={label}>
+            <div key={label} aria-current={active ? "step" : undefined}>
               <div
                 className={[
                   "h-1.5 rounded-full",

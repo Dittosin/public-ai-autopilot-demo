@@ -9,7 +9,7 @@ import { OnboardingPage } from "./pages/OnboardingPage";
 import { PackageDetailPage } from "./pages/PackageDetailPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import { TrustCenterPage } from "./pages/TrustCenterPage";
-import type { HomeView, MissionPhase, Screen } from "./types";
+import type { ExecutionStage, HomeView, MissionPhase, Screen } from "./types";
 
 function App() {
   const [screen, setScreen] = useState<Screen>("home");
@@ -18,6 +18,8 @@ function App() {
   const [simpleMode, setSimpleMode] = useState(false);
   const [homeView, setHomeView] = useState<HomeView>("goal");
   const [missionPhase, setMissionPhase] = useState<MissionPhase>("planning");
+  const [missionCreated, setMissionCreated] = useState(false);
+  const [executionStage, setExecutionStage] = useState<ExecutionStage>("idle");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -30,6 +32,9 @@ function App() {
           <OnboardingPage
             onStart={() => {
               setHomeView("goal");
+              setMissionPhase("planning");
+              setMissionCreated(false);
+              setExecutionStage("idle");
               setScreen("home");
             }}
           />
@@ -43,6 +48,8 @@ function App() {
             onChangeView={setHomeView}
             onCreateMission={() => {
               setMissionPhase("planning");
+              setMissionCreated(true);
+              setExecutionStage("idle");
               setHomeView("mission");
             }}
             onConfirmEmployment={() => setMissionPhase("employmentConfirmed")}
@@ -57,6 +64,7 @@ function App() {
         return (
           <PackageDetailPage
             simpleMode={simpleMode}
+            missionPhase={missionPhase}
             onConsent={() => setScreen("consent")}
           />
         );
@@ -64,21 +72,31 @@ function App() {
         return (
           <ConsentPage
             simpleMode={simpleMode}
-            onStartPreparation={() => setScreen("application")}
+            missionPhase={missionPhase}
+            onStartPreparation={() => {
+              setExecutionStage("prepared");
+              setScreen("application");
+            }}
           />
         );
       case "application":
         return (
           <ApplicationPrepPage
             simpleMode={simpleMode}
-            onReview={() => setScreen("approval")}
+            missionPhase={missionPhase}
+            onReview={() => {
+              setExecutionStage("reviewed");
+              setScreen("approval");
+            }}
           />
         );
       case "approval":
         return (
           <FinalApprovalPage
             simpleMode={simpleMode}
+            missionPhase={missionPhase}
             onLogs={() => setScreen("logs")}
+            onSubmit={() => setExecutionStage("submitted")}
           />
         );
       case "logs":
@@ -86,6 +104,8 @@ function App() {
           <AuditLogPage
             simpleMode={simpleMode}
             missionPhase={missionPhase}
+            missionCreated={missionCreated}
+            executionStage={executionStage}
           />
         );
       case "settings":

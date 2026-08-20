@@ -19,6 +19,8 @@ export type HomeView =
 
 export type MissionPhase = "planning" | "employmentConfirmed";
 
+export type ExecutionStage = "idle" | "prepared" | "reviewed" | "submitted";
+
 export type ActionState = "now" | "watch" | "wait" | "drop";
 
 export type ProfileFact = {

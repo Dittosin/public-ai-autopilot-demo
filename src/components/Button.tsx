@@ -24,7 +24,7 @@ export function Button({
     <button
       type="button"
       className={[
-        "inline-flex min-h-[52px] items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[15px] font-extrabold transition active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60",
+        "inline-flex min-h-[52px] items-center justify-center gap-2 rounded-[10px] px-5 py-3 text-[15px] font-extrabold transition-[background-color,color,box-shadow,transform,opacity] active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-60",
         styles[variant],
         className,
       ].join(" ")}

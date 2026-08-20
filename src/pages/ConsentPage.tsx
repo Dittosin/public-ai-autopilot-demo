@@ -2,17 +2,23 @@ import { ArrowRight, Database, RotateCcw } from "lucide-react";
 import { Button } from "../components/Button";
 import { ProgressSteps } from "../components/ProgressSteps";
 import { ScreenHeader } from "../components/ScreenHeader";
-import { consentItems } from "../data/mockData";
+import { consentItems, housingConsentItems } from "../data/mockData";
+import type { MissionPhase } from "../types";
 
 type ConsentPageProps = {
   simpleMode: boolean;
+  missionPhase: MissionPhase;
   onStartPreparation: () => void;
 };
 
 export function ConsentPage({
   simpleMode,
+  missionPhase,
   onStartPreparation,
 }: ConsentPageProps) {
+  const visibleConsentItems =
+    missionPhase === "employmentConfirmed" ? housingConsentItems : consentItems;
+
   return (
     <section className="px-5 py-5">
       <ProgressSteps current={2} />
@@ -30,12 +36,12 @@ export function ConsentPage({
       </div>
 
       <article className="app-card mt-5 rounded-[8px] px-4">
-        {consentItems.map((item, index) => (
+        {visibleConsentItems.map((item, index) => (
           <div
             key={item.dataName}
             className={[
               "py-4",
-              index < consentItems.length - 1 ? "border-b hairline" : "",
+              index < visibleConsentItems.length - 1 ? "border-b hairline" : "",
             ].join(" ")}
           >
             <div className="flex gap-3">

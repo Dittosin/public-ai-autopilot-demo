@@ -34,7 +34,7 @@ export function BottomNav({ currentScreen, onNavigate }: BottomNavProps) {
               type="button"
               onClick={() => onNavigate(tab.key)}
               className={[
-                "flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-[10px] text-[11px] font-bold transition",
+                "flex min-h-12 flex-col items-center justify-center gap-0.5 rounded-[10px] text-[11px] font-bold transition-[background-color,color]",
                 active
                   ? "bg-[#eef4ff] text-[#2f6bff]"
                   : "text-[#9ca3af] hover:bg-[#f7f9fc]",
