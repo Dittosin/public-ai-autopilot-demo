@@ -73,8 +73,8 @@ export type DirectionOption = {
 };
 
 export type PackageStatus =
-  | "바로 신청 가능"
-  | "추가 확인 필요"
+  | "사전 확인 가능"
+  | "추가 확인 후 신청"
   | "현재 해당 없음"
   | "추후 알림 필요";
 

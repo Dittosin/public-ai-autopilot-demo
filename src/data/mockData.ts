@@ -225,12 +225,12 @@ export const rightsPackages: RightsPackage[] = [
       {
         name: "청년 취업지원",
         description: "현재 상태에서 신청 가능성을 먼저 확인할 수 있습니다. (데모 예시)",
-        status: "바로 신청 가능",
+        status: "사전 확인 가능",
       },
       {
         name: "직업훈련 지원",
         description: "희망 직무를 확인하면 과정 범위를 더 좁힐 수 있습니다. (데모 예시)",
-        status: "추가 확인 필요",
+        status: "추가 확인 후 신청",
       },
       {
         name: "청년 주거지원",
@@ -257,7 +257,7 @@ export const housingRightsPackage: RightsPackage = {
     {
       name: "근무지 기준 주거지원",
       description: "입주 희망 시점을 확인하면 가능성을 더 좁힐 수 있습니다. (데모 예시)",
-      status: "추가 확인 필요",
+      status: "추가 확인 후 신청",
     },
     {
       name: "근무지 인근 청년주택 공고",

@@ -33,7 +33,7 @@ export function OnboardingPage({ onStart }: OnboardingPageProps) {
           </div>
           <div>
             <p className="text-[11px] font-bold text-[#6b7280]">정책공모전 데모</p>
-            <p className="text-[17px] font-extrabold">내 삶의 오토파일럿</p>
+            <p className="text-[17px] font-extrabold">개인 공공 AI 에이전트</p>
           </div>
         </div>
         <span className="rounded-full bg-white px-3 py-1.5 text-[12px] font-extrabold text-[#6b7280] shadow-sm">

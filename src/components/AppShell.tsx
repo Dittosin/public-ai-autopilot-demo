@@ -59,8 +59,8 @@ export function AppShell({
                   <p className="truncate text-[11px] font-bold text-[#6b7280]">
                     정책공모전 데모
                   </p>
-                  <p className="truncate text-[17px] font-extrabold">
-                    국민 AI 오토파일럿
+                  <p className="truncate text-[15px] font-extrabold">
+                    개인 공공 AI 에이전트
                   </p>
                 </div>
               </button>

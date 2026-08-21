@@ -20,6 +20,19 @@ function App() {
   const [missionPhase, setMissionPhase] = useState<MissionPhase>("planning");
   const [missionCreated, setMissionCreated] = useState(false);
   const [executionStage, setExecutionStage] = useState<ExecutionStage>("idle");
+  const [homeNotice, setHomeNotice] = useState("");
+
+  const navigate = (nextScreen: Screen) => {
+    if (nextScreen === "package" && !missionCreated) {
+      setHomeView("goal");
+      setHomeNotice("먼저 목표를 설정하면 실행할 지원을 정리해드려요.");
+      setScreen("home");
+      return;
+    }
+
+    setHomeNotice("");
+    setScreen(nextScreen);
+  };
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "auto" });
@@ -35,6 +48,7 @@ function App() {
               setMissionPhase("planning");
               setMissionCreated(false);
               setExecutionStage("idle");
+              setHomeNotice("");
               setScreen("home");
             }}
           />
@@ -45,16 +59,24 @@ function App() {
             simpleMode={simpleMode}
             view={homeView}
             missionPhase={missionPhase}
-            onChangeView={setHomeView}
+            navigationNotice={homeNotice}
+            onChangeView={(view) => {
+              setHomeNotice("");
+              setHomeView(view);
+            }}
             onCreateMission={() => {
               setMissionPhase("planning");
               setMissionCreated(true);
               setExecutionStage("idle");
+              setHomeNotice("");
               setHomeView("mission");
             }}
             onConfirmEmployment={() => setMissionPhase("employmentConfirmed")}
             onResetMission={() => setMissionPhase("planning")}
-            onOpenPackage={() => setScreen("package")}
+            onOpenPackage={() => {
+              setHomeNotice("");
+              setScreen("package");
+            }}
             onOpenConsent={() => setScreen("consent")}
             onOpenLogs={() => setScreen("logs")}
             onOpenSettings={() => setScreen("settings")}
@@ -140,7 +162,7 @@ function App() {
       largeText={largeText}
       highContrast={highContrast}
       simpleMode={simpleMode}
-      onNavigate={setScreen}
+      onNavigate={navigate}
       onToggleLargeText={() => setLargeText((value) => !value)}
       onToggleHighContrast={() => setHighContrast((value) => !value)}
       onToggleSimpleMode={() => setSimpleMode((value) => !value)}

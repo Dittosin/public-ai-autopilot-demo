@@ -38,6 +38,7 @@ type HomePageProps = {
   simpleMode: boolean;
   view: HomeView;
   missionPhase: MissionPhase;
+  navigationNotice: string;
   onChangeView: (view: HomeView) => void;
   onCreateMission: () => void;
   onConfirmEmployment: () => void;
@@ -48,10 +49,31 @@ type HomePageProps = {
   onOpenSettings: () => void;
 };
 
+const relatedGoalWords = [
+  "취업",
+  "취직",
+  "일자리",
+  "구직",
+  "직장",
+  "일하고",
+  "일할",
+  "독립",
+  "자취",
+  "혼자살",
+  "나가서살",
+  "이사",
+];
+
+function matchesDemoScenario(value: string) {
+  const normalized = value.replace(/\s/g, "");
+  return relatedGoalWords.some((word) => normalized.includes(word));
+}
+
 export function HomePage(props: HomePageProps) {
   if (props.view === "goal") {
     return (
       <GoalComposer
+        navigationNotice={props.navigationNotice}
         onCreateMission={props.onCreateMission}
         onFindDirection={() => props.onChangeView("direction")}
         onBrowseSupport={() => props.onChangeView("support")}
@@ -83,42 +105,53 @@ export function HomePage(props: HomePageProps) {
 }
 
 function GoalComposer({
+  navigationNotice,
   onCreateMission,
   onFindDirection,
   onBrowseSupport,
 }: {
+  navigationNotice: string;
   onCreateMission: () => void;
   onFindDirection: () => void;
   onBrowseSupport: () => void;
 }) {
   const [goal, setGoal] = useState(missionBefore.userGoal);
-  const [goalError, setGoalError] = useState("");
+  const [showScenarioAssist, setShowScenarioAssist] = useState(false);
 
   return (
-    <section className="px-5 py-6">
+    <section className="px-5 pb-5 pt-4">
       <div>
         <p className="text-[12px] font-extrabold text-[#2f6bff]">
           정책을 추천하는 AI가 아니라, 다음 할 일을 찾는 AI
         </p>
-        <h1 className="keep-korean mt-3 text-[31px] font-extrabold leading-[1.18]">
+        <h1 className="keep-korean mt-2 text-pretty text-[31px] font-extrabold leading-[1.18]">
           무엇을 이루고 싶나요?
         </h1>
-        <p className="muted-text mt-3 text-[15px] font-semibold leading-6">
+        <p className="muted-text mt-2 text-[14px] font-semibold leading-6">
           목표를 말하면 지금 할 일과 기다릴 일을 하나의 미션으로 관리해요.
         </p>
       </div>
 
+      {navigationNotice ? (
+        <div
+          className="mt-3 rounded-[8px] border border-[#cfe0ff] bg-[#eef4ff] px-3 py-2.5 text-[12px] font-bold leading-5 text-[#1e4ed8]"
+          role="status"
+          aria-live="polite"
+        >
+          {navigationNotice}
+        </div>
+      ) : null}
+
       <form
-        className="app-card mt-6 rounded-[8px] p-4"
+        className="app-card mt-4 rounded-[8px] p-4"
         onSubmit={(event) => {
           event.preventDefault();
-          const normalizedGoal = goal.replace(/\s/g, "");
-          if (!normalizedGoal) return;
-          if (!normalizedGoal.includes("취업") || !normalizedGoal.includes("독립")) {
-            setGoalError("현재 데모는 ‘취업하고 독립하기’ 대표 시나리오를 지원합니다.");
+          if (!goal.trim()) return;
+          if (!matchesDemoScenario(goal)) {
+            setShowScenarioAssist(true);
             return;
           }
-          setGoalError("");
+          setShowScenarioAssist(false);
           onCreateMission();
         }}
       >
@@ -137,23 +170,43 @@ function GoalComposer({
           value={goal}
           onChange={(event) => {
             setGoal(event.target.value);
-            if (goalError) setGoalError("");
+            if (showScenarioAssist) setShowScenarioAssist(false);
           }}
           rows={3}
           className="mt-3 w-full resize-none rounded-[8px] border border-[#dfe6ef] bg-[#f9fbfd] p-4 text-[18px] font-bold leading-7 text-[#1f2937] outline-none"
         />
-        <div className="mt-3 flex items-center gap-2 text-[12px] font-bold text-[#6b7280]">
-          <Mic aria-hidden="true" size={17} className="text-[#2f6bff]" />
-          음성 입력은 실제 녹음 없이 UI만 보여줍니다
+        <div
+          className="muted-text mt-2 flex items-center gap-1.5 text-[11px] font-semibold"
+          title="음성 입력은 실제로 녹음하거나 전송하지 않는 데모 UI입니다."
+        >
+          <Mic aria-hidden="true" size={15} className="text-[#2f6bff]" />
+          음성 입력 데모
         </div>
-        {goalError ? (
-          <p className="mt-3 rounded-[8px] bg-[#fff7ed] px-3 py-2 text-[12px] font-bold leading-5 text-[#9a4f0a]" role="alert">
-            {goalError}
-          </p>
+        {showScenarioAssist ? (
+          <div
+            className="mt-3 rounded-[8px] border border-[#cfe0ff] bg-[#f7f9ff] p-3"
+            role="status"
+            aria-live="polite"
+          >
+            <p className="text-[12px] font-bold leading-5 text-[#4b5563]">
+              현재 데모에서는 사회진입기 청년의 ‘서울 취업 + 독립’ 시나리오로 체험할 수 있어요.
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                setGoal(missionBefore.userGoal);
+                setShowScenarioAssist(false);
+                onCreateMission();
+              }}
+              className="mt-2 min-h-11 w-full rounded-[8px] bg-white px-3 text-[13px] font-extrabold text-[#2f6bff] shadow-sm hover:bg-[#eef4ff]"
+            >
+              대표 시나리오로 체험하기
+            </button>
+          </div>
         ) : null}
         <Button
           type="submit"
-          className="mt-5 w-full"
+          className="mt-4 w-full"
           disabled={!goal.trim()}
           icon={<Sparkles aria-hidden="true" size={19} />}
         >
@@ -161,7 +214,7 @@ function GoalComposer({
         </Button>
       </form>
 
-      <div className="surface mt-4 flex items-center gap-3 rounded-[8px] border hairline bg-white px-4 py-3">
+      <div className="surface mt-3 flex items-center gap-3 rounded-[8px] border hairline bg-white px-4 py-3">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#eef4ff] text-[#2f6bff]">
           <UserRoundSearch aria-hidden="true" size={18} />
         </div>
@@ -173,7 +226,7 @@ function GoalComposer({
         </div>
       </div>
 
-      <div className="mt-5 border-t hairline pt-4">
+      <div className="mt-4 border-t hairline pt-3">
         <p className="muted-text text-center text-[12px] font-bold">
           목표가 아직 선명하지 않다면
         </p>
@@ -195,7 +248,7 @@ function GoalComposer({
         </div>
       </div>
 
-      <p className="muted-text mt-5 text-center text-[11px] font-semibold leading-5">
+      <p className="muted-text mt-4 text-center text-[10px] font-semibold leading-4">
         시연용 프로토타입으로 실제 개인정보·공공 마이데이터·행정시스템과 연계되지 않습니다.
       </p>
     </section>
@@ -210,7 +263,7 @@ function DirectionFinder({
   onCreateMission: () => void;
 }) {
   return (
-    <section className="px-5 py-5">
+    <section className="px-5 pb-5 pt-4">
       <BackButton onClick={onBack} />
       <div className="mt-5">
         <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
@@ -288,7 +341,7 @@ function SupportExplorer({
   const states: ActionState[] = ["now", "now", "watch", "wait"];
 
   return (
-    <section className="px-5 py-5">
+    <section className="px-5 pb-5 pt-4">
       <BackButton onClick={onBack} />
       <div className="mt-5">
         <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
@@ -342,7 +395,7 @@ function SupportExplorer({
         이 지원을 미션으로 관리하기
       </Button>
       <Button variant="secondary" onClick={onOpenPackage} className="mt-3 w-full">
-        분류 결과 자세히 보기
+        지원 상태 자세히 보기
       </Button>
       <p className="muted-text mt-4 text-center text-[12px] font-semibold">
         모든 항목은 시나리오 기반 데모 예시입니다.
@@ -377,7 +430,7 @@ function MissionBoard({
   }
 
   return (
-    <section className="px-5 py-5">
+    <section className="px-5 pb-5 pt-4">
       <div>
         <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#2f6bff]">
           <Target aria-hidden="true" size={16} />
@@ -397,7 +450,11 @@ function MissionBoard({
         <ReplanSummary onReset={onResetMission} />
       ) : null}
 
-      <PrimaryActionCard action={primaryAction} onOpen={onOpenPackage} />
+      <PrimaryActionCard
+        action={primaryAction}
+        compact={missionPhase === "employmentConfirmed"}
+        onOpen={onOpenPackage}
+      />
 
       <div className="mt-3 space-y-2">
         <SupportingAction
@@ -460,15 +517,28 @@ function MissionBoard({
   );
 }
 
-function PrimaryActionCard({ action, onOpen }: { action: MissionAction; onOpen: () => void }) {
+function PrimaryActionCard({
+  action,
+  compact,
+  onOpen,
+}: {
+  action: MissionAction;
+  compact: boolean;
+  onOpen: () => void;
+}) {
   return (
-    <article className="mt-5 overflow-hidden rounded-[8px] bg-[#244fc7] text-white shadow-[0_16px_34px_rgba(36,79,199,0.2)]">
-      <div className="p-5">
+    <article
+      className={[
+        "overflow-hidden rounded-[8px] bg-[#244fc7] text-white shadow-[0_16px_34px_rgba(36,79,199,0.2)]",
+        compact ? "mt-3" : "mt-4",
+      ].join(" ")}
+    >
+      <div className="p-4">
         <div className="flex items-center gap-2 text-[13px] font-extrabold text-white/80">
           <CircleDot aria-hidden="true" size={17} />
           지금 할 일
         </div>
-        <h2 className="keep-korean mt-3 text-[22px] font-extrabold leading-7 text-white">
+        <h2 className="keep-korean mt-2 text-[21px] font-extrabold leading-7 text-white">
           {action.title}
         </h2>
         <p className="mt-2 text-[13px] font-medium leading-5 text-white/75">
@@ -489,7 +559,7 @@ function PrimaryActionCard({ action, onOpen }: { action: MissionAction; onOpen: 
           className="mt-3 w-full"
           icon={<ArrowRight aria-hidden="true" size={18} />}
         >
-          지원 분류 확인
+          지원 확인하기
         </Button>
       </div>
     </article>
@@ -520,7 +590,9 @@ function SupportingAction({
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-[11px] font-extrabold text-[#6b7280]">{label}</p>
-          <p className="mt-0.5 truncate text-[14px] font-extrabold">{action.title}</p>
+          <p className="mt-0.5 line-clamp-2 break-words text-[14px] font-extrabold leading-5">
+            {action.title}
+          </p>
         </div>
         <ChevronDown aria-hidden="true" size={17} className="shrink-0 text-[#6b7280]" />
       </summary>
@@ -557,7 +629,7 @@ function CompactAction({ action, last }: { action: MissionAction; last: boolean 
 function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void }) {
   return (
     <article className="mt-3 rounded-[8px] bg-[#18233a] p-4 text-white" aria-live="polite">
-      <p className="text-[11px] font-extrabold text-white/60">데모 상황 적용</p>
+      <p className="text-[11px] font-extrabold text-white/60">상황 변화 체험</p>
       <p className="mt-1 text-[15px] font-extrabold">
         상황이 바뀌면 다음 할 일도 바뀝니다
       </p>
@@ -570,7 +642,7 @@ function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void
         <RefreshCw aria-hidden="true" size={17} className={loading ? "animate-spin" : ""} />
         {loading
           ? "취업 상태를 반영해 미션을 다시 확인하고 있어요…"
-          : "‘취업 확정 · 강남 · 12월 출근’ 적용"}
+          : "취업이 확정된 상황 반영하기"}
       </button>
     </article>
   );
@@ -579,20 +651,20 @@ function ReplanTrigger({ loading, onRun }: { loading: boolean; onRun: () => void
 function ReplanSummary({ onReset }: { onReset: () => void }) {
   return (
     <article
-      className="surface mt-4 rounded-[8px] border border-[#b9dcd0] bg-[#f2fbf7] p-4"
+      className="surface mt-3 rounded-[8px] border border-[#b9dcd0] bg-[#f2fbf7] p-3.5"
       aria-live="polite"
     >
       <div className="flex items-center gap-2 text-[12px] font-extrabold text-[#0f7b55]">
         <Check aria-hidden="true" size={16} />
         {replanResult.eventTitle}
       </div>
-      <h2 className="keep-korean mt-2 text-[18px] font-extrabold leading-6">
+      <h2 className="keep-korean mt-1.5 text-[17px] font-extrabold leading-6">
         {replanResult.title}
       </h2>
-      <p className="muted-text mt-2 text-[13px] font-medium leading-5">
+      <p className="muted-text mt-1 text-[12px] font-medium leading-5">
         {replanResult.description}
       </p>
-      <div className="mt-3 grid grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-[8px] bg-white/70 px-3 py-3">
+      <div className="mt-2 grid grid-cols-[1fr_auto_1fr] items-center gap-2 rounded-[8px] bg-white/70 px-3 py-2.5">
         <div>
           <p className="text-[10px] font-bold text-[#8b94a3]">이전</p>
           <p className="mt-1 text-[12px] font-extrabold">취업지원 확인</p>

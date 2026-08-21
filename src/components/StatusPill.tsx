@@ -6,12 +6,12 @@ type StatusPillProps = {
 
 export function StatusPill({ status }: StatusPillProps) {
   const config = {
-    "바로 신청 가능": {
-      label: "바로 신청",
+    "사전 확인 가능": {
+      label: "사전 확인",
       className: "bg-[#e9f8f1] text-[#0f7b55]",
     },
-    "추가 확인 필요": {
-      label: "확인 필요",
+    "추가 확인 후 신청": {
+      label: "추가 확인",
       className: "bg-[#fff6e6] text-[#9a5b00]",
     },
     "현재 해당 없음": {

@@ -44,7 +44,7 @@ export function PackageDetailPage({
       <article className="app-card mt-5 rounded-[8px] px-4">
         <div className="flex items-center gap-2 border-b hairline py-4">
           <Sparkles aria-hidden="true" size={18} className="text-[#2f6bff]" />
-          <p className="text-[15px] font-extrabold">현재 상태 기준 분류</p>
+          <p className="text-[15px] font-extrabold">지원별 다음 단계</p>
         </div>
         {item.items.map((support, index) => (
           <div
